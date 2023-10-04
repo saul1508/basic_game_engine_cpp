@@ -22,8 +22,8 @@ namespace Engine {
 		m_log->start();
 
 		//Reset timer
-		//m_timer.reset(new ChronoTimer);
-		//m_timer->start();
+		m_timer.reset(new ChronoTimer);
+		m_timer->start();
 	
 	}
 
@@ -42,9 +42,11 @@ namespace Engine {
 
 		while (m_running)
 		{
-			Log::info("Hello World! {0} {1}", 42, "I am a string");
-			//timeStep = m_timer->getElapsedTimeMilli();
-			//m_timer->reset();
+			timeStep = m_timer->getElapsedTimeSec();
+			Log::trace("Hello World! {0} {1}", 42, "I am a string");
+			m_timer->reset();
+			//Log::trace("FPS {0}", 1.0f / timeStep);
+			
 		};
 	}
 

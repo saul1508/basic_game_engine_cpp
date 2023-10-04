@@ -33,7 +33,7 @@ namespace Engine {
 			static void release(Args&&... args);
 
 			template<class ...Args> //!< Variadic template 
-				static void file(Args&&... args);
+			static void file(Args&&... args);
 
 		private :
 			static std::shared_ptr<spdlog::logger> s_consoleLogger; //!< Console logger
@@ -42,17 +42,23 @@ namespace Engine {
 
 	template<class ...Args>
 	static void Log::debug(Args&&... args) {
+#ifdef NG_DEBUG
 		s_consoleLogger->debug(std::forward<Args>(args) ...);
+#endif
 	}
 
 	template<class ...Args>
 	static void Log::error(Args&&... args) {
+#ifdef NG_DEBUG
 		s_consoleLogger->error(std::forward<Args>(args) ...);
+#endif
 	}
 
 	template<class ...Args>
 	static void Log::info(Args&&... args) {
+#ifdef NG_DEBUG
 		s_consoleLogger->info(std::forward<Args>(args) ...);
+#endif
 	}
 
 	template<class ...Args>
@@ -62,16 +68,22 @@ namespace Engine {
 
 	template<class ...Args>
 	static void Log::warn(Args&&... args) {
+#ifdef NG_DEBUG
 		s_consoleLogger->warn(std::forward<Args>(args) ...);
+#endif
 	}
 
 	template<class ...Args>
 	static void Log::release(Args&&... args) {
+#ifdef NG_DEBUG
 		s_consoleLogger->release(std::forward<Args>(args) ...);
+#endif
 	}
 
 	template<class ...Args>
 	static void Log::file(Args&&... args) {
-		s_fileLogger->file(std::forward<Args>(args) ...);
+		if (s_fileLogger) {
+			s_fileLogger->trace(std::forward<Args>(args) ...);
+		}
 	}
 }
