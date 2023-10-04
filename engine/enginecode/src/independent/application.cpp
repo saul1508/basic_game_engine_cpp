@@ -18,15 +18,21 @@ namespace Engine {
 		//Start systems
 
 		//Start logger
+		m_log.reset(new Log);
+		m_log->start();
 
 		//Reset timer
-		m_timer.reset(new ChronoTimer);
-		m_timer->start();
+		//m_timer.reset(new ChronoTimer);
+		//m_timer->start();
 	
 	}
 
 	Application::~Application()
 	{
+		// Stop systems
+
+		//Stop logger
+		m_log->stop();
 	}
 
 
@@ -36,8 +42,9 @@ namespace Engine {
 
 		while (m_running)
 		{
-			timeStep = m_timer->getElapsedTimeMilli();
-			m_timer->reset();
+			Log::info("Hello World! {0} {1}", 42, "I am a string");
+			//timeStep = m_timer->getElapsedTimeMilli();
+			//m_timer->reset();
 		};
 	}
 
