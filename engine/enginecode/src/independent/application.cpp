@@ -14,6 +14,15 @@ namespace Engine {
 		{
 			s_instance = this;
 		}
+
+		//Start systems
+
+		//Start logger
+
+		//Reset timer
+		m_timer.reset(new ChronoTimer);
+		m_timer->start();
+	
 	}
 
 	Application::~Application()
@@ -23,9 +32,12 @@ namespace Engine {
 
 	void Application::run()
 	{
+		float timeStep = 0.f;
+
 		while (m_running)
 		{
-
+			timeStep = m_timer->getElapsedTimeMilli();
+			m_timer->reset();
 		};
 	}
 

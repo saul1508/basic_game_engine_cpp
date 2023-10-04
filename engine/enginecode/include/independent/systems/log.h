@@ -1,0 +1,42 @@
+/** \file log.h */
+#pragma once
+#include "system.h"
+#include <spdlog/spdlog.h>
+
+/**
+\class Log - interface class for the log class
+*/
+
+namespace Engine {
+
+	class Log : public System {
+		public:
+			virtual void start(SystemSignal init = SystemSignal::None, ...) override; //!< Start logger
+			virtual void stop(SystemSignal close = SystemSignal::None, ...) override; //!< Stop logger
+
+		/*	template<class ...Args> //!< Variadic template
+			static void debug(Args&&... args);
+
+			template<class ...Args> //!< Variadic template
+			static void error(Args&&... args);
+
+			template<class ...Args> //!< Variadic template 
+			static void info(Args&&... args);
+
+			template<class ...Args> //!< Variadic template 
+			static void trace(Args&&... args);
+
+			template<class ...Args> //!< Variadic template 
+			static void warn(Args&&... args);
+
+			template<class ...Args> //!< Variadic template 
+			static void release(Args&&... args);
+
+			template<class ...Args> //!< Variadic template 
+			static void file(Args&&... args);*/
+
+		private :
+			static std::shared_ptr<spdlog::logger> s_consoleLogger;
+			static std::shared_ptr<spdlog::logger> s_fileLogger;
+	};
+}

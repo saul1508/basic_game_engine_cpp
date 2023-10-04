@@ -1,20 +1,19 @@
-/** \file application.h
-*/
+/** \file application.h */
 #pragma once
+#include "systems/log.h"
+#include "systems/timer.h"
 
+
+/** \class ApplicationFundemental class of the engine. A singleton which runs the game loop infinitely. */
 
 namespace Engine {
-
-	/**
-	\class Application
-	Fundemental class of the engine. A singleton which runs the game loop infinitely.
-	Provides ...
-	*/
-
 	class Application
 	{
 	protected:
 		Application(); //!< Constructor
+
+		std::shared_ptr<Timer> m_timer;
+		
 	private:
 		static Application* s_instance; //!< Singleton instance of the application
 		bool m_running = true; //!< Is the application running?

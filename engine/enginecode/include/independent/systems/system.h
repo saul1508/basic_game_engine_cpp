@@ -1,13 +1,8 @@
-/** \file system.h
-*/
-
+/** \file system.h*/
 #pragma once
-
 #include <cstdarg>
 
-/**
-\class Interface class for all systems
-*/
+/** \class Interface class for all systems */
 
 namespace Engine {
 
