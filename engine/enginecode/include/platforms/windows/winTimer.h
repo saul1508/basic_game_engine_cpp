@@ -2,7 +2,7 @@
 #pragma once
 
 #include <Windows.h>
-#include "systems/timer.h"
+#include "core/timer.h"
 
 namespace Engine {
 	/** \class WinTimer

@@ -25,6 +25,10 @@ namespace Engine {
 		m_log.reset(new Log);
 		m_log->start();
 
+		//Start random number system
+		m_randNumSystem.reset(new RandNumGenerator);
+		m_randNumSystem->start();
+
 		//Reset timer
 #ifdef NG_PLATFORM_WINDOWS
 		m_timer.reset(new WinTimer);
@@ -39,6 +43,8 @@ namespace Engine {
 	{
 		// Stop systems
 
+		//Stop random number system
+		m_randNumSystem->stop();
 		//Stop logger
 		m_log->stop();
 	}
@@ -51,10 +57,11 @@ namespace Engine {
 		while (m_running)
 		{
 			timeStep = m_timer->getElapsedTime();
-			//Log::trace("Hello World! {0} {1}", 42, "I am a string");
 			m_timer->reset();
-			Log::trace("FPS {0}", 1.0f / timeStep);
-			
+			//Log::trace("Hello World! {0} {1}", 42, "I am a string");
+			//Log::trace("FPS {0}", 1.0f / timeStep);
+			//Log::trace("{0}", RandNumGenerator::normalInt(10.f, 2.5f));
+			Log::trace("{0}", RandNumGenerator::uniformIntBetween(-10, 10));
 		};
 	}
 
