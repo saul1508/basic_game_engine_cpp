@@ -3,6 +3,7 @@
 #include "systems/log.h"
 #include "systems/timer.h"
 #include "systems/chronoTimer.h"
+#include "platforms/windows/winTimer.h"
 
 
 /** \class ApplicationFundemental class of the engine. A singleton which runs the game loop infinitely. */

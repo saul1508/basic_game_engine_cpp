@@ -13,7 +13,7 @@ namespace Engine {
 
 		s_consoleLogger = spdlog::stderr_color_mt("Console");
 
-		/*char filepath[256] = "logs/";
+		/*char filepath[256] = "logs/";`1
 		char time[128];
 
 		try {

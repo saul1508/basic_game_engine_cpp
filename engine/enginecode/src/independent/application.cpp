@@ -4,6 +4,10 @@
 #include "engine_pch.h"
 #include "core/application.h"
 
+#ifdef NG_PLATFORM_WINDOWS
+	#include "platforms/windows/winTimer.h"
+#endif
+
 namespace Engine {
 	// Set static vars
 	Application* Application::s_instance = nullptr;
@@ -22,7 +26,11 @@ namespace Engine {
 		m_log->start();
 
 		//Reset timer
+#ifdef NG_PLATFORM_WINDOWS
+		m_timer.reset(new WinTimer);
+#else
 		m_timer.reset(new ChronoTimer);
+#endif
 		m_timer->start();
 	
 	}
@@ -42,10 +50,10 @@ namespace Engine {
 
 		while (m_running)
 		{
-			timeStep = m_timer->getElapsedTimeSec();
-			Log::trace("Hello World! {0} {1}", 42, "I am a string");
+			timeStep = m_timer->getElapsedTime();
+			//Log::trace("Hello World! {0} {1}", 42, "I am a string");
 			m_timer->reset();
-			//Log::trace("FPS {0}", 1.0f / timeStep);
+			Log::trace("FPS {0}", 1.0f / timeStep);
 			
 		};
 	}

@@ -12,8 +12,7 @@ namespace Engine {
 		public:
 			virtual void start() = 0; //<! Start timer
 			virtual void reset() = 0; //<! Reset timer
-			virtual float getElapsedTimeMilli() = 0; //<! Returns the time elapsed in milliseconds since last start or restart of timer
-			virtual float getElapsedTimeSec() = 0; //<! Returns the time elapsed in seconds since last start or restart of timer
+			virtual float getElapsedTime() = 0; //<! Returns the time elapsed in milliseconds since last start or restart of timer
 	};
 
 }
