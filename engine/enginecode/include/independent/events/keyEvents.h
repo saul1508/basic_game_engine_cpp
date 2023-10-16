@@ -5,14 +5,14 @@
 
 namespace Engine {
 
-	/** \class KeyPressedEvent */
+	/** \class KeyPressEvent */
 
-	class KeyPressedEvent : public Event {
+	class KeyPressEvent : public Event {
 		public:
-			KeyPressedEvent(uint32_t keyCode, uint32_t repeatCount) : Event(EventType::KeyPressed, EventCategory::EventCategoryKeyboard | EventCategory::EventCategoryInput),
+			KeyPressEvent(uint32_t keyCode, uint32_t repeatCount) : Event(EventType::KeyPress, EventCategory::EventCategoryKeyboard | EventCategory::EventCategoryInput),
 				m_keyCode(keyCode), m_repeatCount(repeatCount) { }
-			static EventType getStaticType() { return EventType::KeyPressed; }
-			virtual EventType getEventType() const override { return EventType::KeyPressed; }
+			static EventType getStaticType() { return EventType::KeyPress; }
+			virtual EventType getEventType() const override { return EventType::KeyPress; }
 			virtual int32_t getCategoryFlags() const override { return EventCategoryKeyboard; }
 			uint32_t getKeyCode() { return m_keyCode; }
 			uint32_t getRepeatCount() { return m_repeatCount; }
@@ -21,14 +21,14 @@ namespace Engine {
 			uint32_t m_repeatCount;
 	};
 
-	/** \class KeyReleasedEvent */
+	/** \class KeyReleaseEvent */
 
-	class KeyReleasedEvent : public Event {
+	class KeyReleaseEvent : public Event {
 		public:
-			KeyReleasedEvent(uint32_t keyCode, uint32_t repeatCount) : Event(EventType::KeyRealeased, EventCategory::EventCategoryKeyboard | EventCategory::EventCategoryInput),
+			KeyReleaseEvent(uint32_t keyCode, uint32_t repeatCount) : Event(EventType::KeyRealease, EventCategory::EventCategoryKeyboard | EventCategory::EventCategoryInput),
 				m_keyCode(keyCode), m_repeatCount(repeatCount) { }
-			static EventType getStaticType() { return EventType::KeyRealeased; }
-			virtual EventType getEventType() const override { return EventType::KeyRealeased; }
+			static EventType getStaticType() { return EventType::KeyRealease; }
+			virtual EventType getEventType() const override { return EventType::KeyRealease; }
 			virtual int32_t getCategoryFlags() const override { return EventCategoryKeyboard; }
 			uint32_t getKeyCode() { return m_keyCode; }
 			uint32_t getRepeatCount() { return m_repeatCount; }
@@ -37,14 +37,14 @@ namespace Engine {
 			uint32_t m_repeatCount;
 	};
 
-	/** \class KeyTypedEvent */
+	/** \class KeyTypeEvent */
 
-	class KeyTypedEvent : public Event {
+	class KeyTypeEvent : public Event {
 		public:
-			KeyTypedEvent(uint32_t keyCode, uint32_t repeatCount) : Event(EventType::KeyTyped, EventCategory::EventCategoryKeyboard | EventCategory::EventCategoryInput),
+			KeyTypeEvent(uint32_t keyCode, uint32_t repeatCount) : Event(EventType::KeyType, EventCategory::EventCategoryKeyboard | EventCategory::EventCategoryInput),
 				m_keyCode(keyCode) { }
-			static EventType getStaticType() { return EventType::KeyTyped; }
-			virtual EventType getEventType() const override { return EventType::KeyTyped; }
+			static EventType getStaticType() { return EventType::KeyType; }
+			virtual EventType getEventType() const override { return EventType::KeyType; }
 			virtual int32_t getCategoryFlags() const override { return EventCategoryKeyboard; }
 			uint32_t getKeyCode() { return m_keyCode; }
 		protected:

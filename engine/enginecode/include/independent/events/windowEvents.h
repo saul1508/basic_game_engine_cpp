@@ -42,24 +42,24 @@ namespace Engine {
 			virtual int32_t getCategoryFlags() const override { return EventCategoryWindow; }
 	};
 
-	/** \class WindowLostFocusEvent */
+	/** \class WindowLoseFocusEvent */
 
-	class WindowLostFocusEvent : public Event {
+	class WindowLoseFocusEvent : public Event {
 		public:
-			WindowLostFocusEvent() : Event(EventType::WindowLostFocus, EventCategory::EventCategoryWindow | EventCategory::EventCategoryInput) { }
-			static EventType getStaticType() { return EventType::WindowLostFocus; }
-			virtual EventType getEventType() const override { return EventType::WindowLostFocus; }
+			WindowLoseFocusEvent() : Event(EventType::WindowLoseFocus, EventCategory::EventCategoryWindow | EventCategory::EventCategoryInput) { }
+			static EventType getStaticType() { return EventType::WindowLoseFocus; }
+			virtual EventType getEventType() const override { return EventType::WindowLoseFocus; }
 			virtual int32_t getCategoryFlags() const override { return EventCategoryWindow; }
 	};
 
-	/** \class WindowMovedEvent */
+	/** \class WindowMoveEvent */
 
-	class WindowMovedEvent : public Event {
+	class WindowMoveEvent : public Event {
 		public:
-			WindowMovedEvent(int32_t newXPos, int32_t newYPos) : Event(EventType::WindowMoved, EventCategory::EventCategoryWindow | EventCategory::EventCategoryInput),
+			WindowMoveEvent(int32_t newXPos, int32_t newYPos) : Event(EventType::WindowMove, EventCategory::EventCategoryWindow | EventCategory::EventCategoryInput),
 				m_newXPos(newXPos), m_newYPos(newYPos) { }
-			static EventType getStaticType() { return EventType::WindowMoved; }
-			virtual EventType getEventType() const override { return EventType::WindowMoved; }
+			static EventType getStaticType() { return EventType::WindowMove; }
+			virtual EventType getEventType() const override { return EventType::WindowMove; }
 			virtual int32_t getCategoryFlags() const override { return EventCategoryWindow; }
 			int32_t getNewXPos() { return m_newXPos; }
 			int32_t getNewYPos() { return m_newYPos; }

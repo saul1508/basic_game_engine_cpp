@@ -36,6 +36,8 @@ namespace Engine {
 #endif
 		m_timer->start();
 	
+		m_eventHandler->setOnWindowClose([this](const WindowCloseEvent& e) {this->onWindowClose(e);});
+
 	}
 
 	Application::~Application()
@@ -48,56 +50,44 @@ namespace Engine {
 		m_log->stop();
 	}
 
-	bool Application::onWindowClose(WindowCloseEvent& e) {
+	void Application::onWindowClose(WindowCloseEvent& e) {
 		Log::trace("Closing application");
 		m_running = false;
-		return true;
 	}
-	bool Application::onWindowResize(WindowResizeEvent& e) {
+	void Application::onWindowResize(WindowResizeEvent& e) {
 		Log::trace("Resized window to {0} by {1}", e.getWidth(), e.getHeight());
-		return true;
 	}
-	bool Application::onWindowFocus(WindowFocusEvent& e) {
+	void Application::onWindowFocus(WindowFocusEvent& e) {
 		Log::trace("Focussed window");
-		return true;
 	}
-	bool Application::onWindowLostFocus(WindowLostFocusEvent& e) {
+	void Application::onWindowLoseFocus(WindowLoseFocusEvent& e) {
 		Log::trace("Unfocussed window");
-		return true;
 	}
-	bool Application::onWindowMove(WindowMovedEvent& e) {
+	void Application::onWindowMove(WindowMoveEvent& e) {
 		Log::trace("Moved window to x:{0}, y:{1}", e.getNewXPos(), e.getNewYPos());
-		return true;
 	}
 
-	bool Application::onKeyPressed(KeyPressedEvent& e) {
+	void Application::onKeyPress(KeyPressEvent& e) {
 		Log::trace("{0} key pressed {1} times", e.getKeyCode(), e.getRepeatCount());
-		return true;
 	}
-	bool Application::onKeyReleased(KeyReleasedEvent& e) {
+	void Application::onKeyRelease(KeyReleaseEvent& e) {
 		Log::trace("{0} key released", e.getKeyCode());
-		return true;
 	}
-	bool Application::onKeyTyped(KeyTypedEvent& e) {
+	void Application::onKeyType(KeyTypeEvent& e) {
 		Log::trace("{0} key typed", e.getKeyCode());
-		return true;
 	}
 
-	bool Application::onMouseButtonPressed(MouseButtonPressedEvent& e) {
+	void Application::onMouseButtonPress(MouseButtonPressEvent& e) {
 		Log::trace("Mouse button {0} pressed", e.getButton());
-		return true;
 	}
-	bool Application::onMouseButtonReleased(MouseButtonReleasedEvent& e) {
+	void Application::onMouseButtonRelease(MouseButtonReleaseEvent& e) {
 		Log::trace("Mouse button {0} released", e.getButton());
-		return true;
 	}
-	bool Application::onMouseScrolled(MouseScrolledEvent& e) {
+	void Application::onMouseScroll(MouseScrollEvent& e) {
 		Log::trace("Mouse scrolled to an offset of {0}", e.getOffset());
-		return true;
 	}
-	bool Application::onMouseMoved(MouseMovedEvent& e) {
+	void Application::onMouseMove(MouseMoveEvent& e) {
 		Log::trace("Mouse moved to x:{0} y:{1}", e.getNewXPos(), e.getNewYPos());
-		return true;
 	}
 
 
@@ -111,24 +101,27 @@ namespace Engine {
 			timeStep = m_timer->getElapsedTime();
 			accumulatedTime += timeStep;
 			m_timer->reset();
+
 			//Log::trace("Hello World! {0} {1}", 42, "I am a string");
 			//Log::trace("FPS {0}", 1.0f / timeStep);
 			//Log::trace("{0}", RandNumGenerator::normalInt(10.f, 2.5f));
 			//Log::trace("{0}", RandNumGenerator::uniformIntBetween(-10, 10));
 			if (accumulatedTime > 10.0f) {
-				WindowResizeEvent e1(1024, 720);
-				onEvent(e1);
-				WindowCloseEvent e2;
-				onEvent(e2);
+
+				WindowCloseEvent close;
+
+				auto& callback = m_eventHandler->getOnWindowClose();
+				WindowCloseEvent wce;
+
+				callback(wce);
+
 			}
 
 		};
 	}
 
 	void Application::onEvent(Event& e) {
-		EventDispatcher dispatcher(e);
-		dispatcher.dispatch<WindowCloseEvent>(std::bind(&Application::onWindowClose, this, std::placeholders::_1));
-		dispatcher.dispatch<WindowResizeEvent>(std::bind(&Application::onWindowResize, this, std::placeholders::_1));
+		
 	}
 
 }
