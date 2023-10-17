@@ -27,11 +27,11 @@ class Event {
 	public:
 		Event() {}; //!< Default constructor
 		Event(EventType type, int32_t categoryFlags) : m_eventType(type), m_categoryFlags(categoryFlags) {}
-		virtual EventType getEventType() const { return m_eventType; }	//!< Gets the event type
-		virtual int32_t getCategoryFlags() const { return m_categoryFlags; } //!< Gets the event category
+		EventType getEventType() const { return m_eventType; }	//!< Gets the event type
+		int32_t getCategoryFlags() const { return m_categoryFlags; } //!< Gets the event category
 		inline bool handled() const { return m_handled; } //!< Checks whether event has been handled
 		inline void handle(bool isHandled) { m_handled = isHandled; } //!< Handled the event
-		inline bool isCategory(EventCategory category) { return getCategoryFlags() & category; } //!< Returns wether the event is in a specified category
+		inline bool isCategory(EventCategory category) const { return getCategoryFlags() & category; } //!< Returns wether the event is in a specified category
 	protected:
 		EventType m_eventType = EventType::None; //!< Stores type of event
 		int32_t m_categoryFlags = EventCategory::None; //!< Stores event category as category flags

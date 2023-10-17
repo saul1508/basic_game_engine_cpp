@@ -10,7 +10,6 @@
 #include "events/keyEvents.h"
 #include "events/mouseEvents.h"
 #include "events/eventHandler.h"
-#include <functional>
 
 /** \class ApplicationFundemental class of the engine. A singleton which runs the game loop infinitely. */
 
@@ -21,8 +20,9 @@ namespace Engine {
 		Application(); //!< Constructor
 		std::shared_ptr<Timer> m_timer; //!< Timer system
 		std::shared_ptr<Log> m_log; //!< Log system
-		std::shared_ptr<EventHandler> m_eventHandler; //!< Event Handler
 		std::shared_ptr<RandNumGenerator> m_randNumSystem; //!< Random number generator system
+
+		EventHandler m_eventHandler; //!< Event Handler
 		void onWindowClose(WindowCloseEvent& e); //!< Run when the window is closed
 		void onWindowResize(WindowResizeEvent& e); //!< Run when the window is resized
 		void onWindowFocus(WindowFocusEvent& e); //!< Run when the window is focussed
@@ -44,7 +44,6 @@ namespace Engine {
 		inline static Application& getInstance() { return *s_instance; } //!< Instance getter from singleton pattern
 		void onEvent(Event& e); //!> Called when an event happends
 		void run(); //!< Main loop
-		void onWindowClose(const WindowCloseEvent& e); //!< Run when the window closes
 
 	};
 

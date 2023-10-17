@@ -36,7 +36,7 @@ namespace Engine {
 #endif
 		m_timer->start();
 	
-		m_eventHandler->setOnWindowClose([this](const WindowCloseEvent& e) {this->onWindowClose(e);});
+		m_eventHandler.setOnWindowClose([this](const WindowCloseEvent& e) {this->onWindowClose(e);});
 
 	}
 
@@ -110,7 +110,7 @@ namespace Engine {
 
 				WindowCloseEvent close;
 
-				auto& callback = m_eventHandler->getOnWindowClose();
+				auto& callback = m_eventHandler.getOnWindowClose();
 				WindowCloseEvent wce;
 
 				callback(wce);

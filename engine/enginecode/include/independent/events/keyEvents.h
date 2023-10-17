@@ -11,9 +11,9 @@ namespace Engine {
 		public:
 			KeyPressEvent(uint32_t keyCode, uint32_t repeatCount) : Event(EventType::KeyPress, EventCategory::EventCategoryKeyboard | EventCategory::EventCategoryInput),
 				m_keyCode(keyCode), m_repeatCount(repeatCount) { }
-			static EventType getStaticType() { return EventType::KeyPress; }
-			virtual EventType getEventType() const override { return EventType::KeyPress; }
-			virtual int32_t getCategoryFlags() const override { return EventCategoryKeyboard; }
+			//static EventType getStaticType() { return EventType::KeyPress; }
+			//EventType getEventType() const { return EventType::KeyPress; }
+			//int32_t getCategoryFlags() const { return EventCategoryKeyboard; }
 			uint32_t getKeyCode() { return m_keyCode; }
 			uint32_t getRepeatCount() { return m_repeatCount; }
 		protected:
@@ -27,9 +27,9 @@ namespace Engine {
 		public:
 			KeyReleaseEvent(uint32_t keyCode, uint32_t repeatCount) : Event(EventType::KeyRealease, EventCategory::EventCategoryKeyboard | EventCategory::EventCategoryInput),
 				m_keyCode(keyCode), m_repeatCount(repeatCount) { }
-			static EventType getStaticType() { return EventType::KeyRealease; }
-			virtual EventType getEventType() const override { return EventType::KeyRealease; }
-			virtual int32_t getCategoryFlags() const override { return EventCategoryKeyboard; }
+			//static EventType getStaticType() { return EventType::KeyRealease; }
+			//EventType getEventType() const { return EventType::KeyRealease; }
+			//int32_t getCategoryFlags() const { return EventCategoryKeyboard; }
 			uint32_t getKeyCode() { return m_keyCode; }
 			uint32_t getRepeatCount() { return m_repeatCount; }
 		protected:
@@ -43,9 +43,9 @@ namespace Engine {
 		public:
 			KeyTypeEvent(uint32_t keyCode, uint32_t repeatCount) : Event(EventType::KeyType, EventCategory::EventCategoryKeyboard | EventCategory::EventCategoryInput),
 				m_keyCode(keyCode) { }
-			static EventType getStaticType() { return EventType::KeyType; }
-			virtual EventType getEventType() const override { return EventType::KeyType; }
-			virtual int32_t getCategoryFlags() const override { return EventCategoryKeyboard; }
+			//static EventType getStaticType() { return EventType::KeyType; }
+			//EventType getEventType() const { return EventType::KeyType; }
+			//int32_t getCategoryFlags() const { return EventCategoryKeyboard; }
 			uint32_t getKeyCode() { return m_keyCode; }
 		protected:
 			uint32_t m_keyCode;
