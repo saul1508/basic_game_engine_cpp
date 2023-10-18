@@ -10,9 +10,9 @@ namespace Engine {
 	
 	class Timer {
 		public:
-			virtual void start() = 0; //<! Start timer
-			virtual void reset() = 0; //<! Reset timer
-			virtual float getElapsedTime() = 0; //<! Returns the time elapsed in milliseconds since last start or restart of timer
+			virtual void start() = 0; //<! Start timer attribute
+			virtual void reset() = 0; //<! Reset timer attribute
+			virtual float getElapsedTime() = 0; //<! Getter method to returns the time elapsed in milliseconds since last start or restart of timer
 	};
 
 }

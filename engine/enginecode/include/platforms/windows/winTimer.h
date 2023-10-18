@@ -11,7 +11,7 @@ namespace Engine {
 
 	class WinTimer : public Timer {
 		public:
-			virtual void start() override {
+			virtual void start() override { 
 				QueryPerformanceFrequency(&m_frequency);
 				QueryPerformanceCounter(&m_startTime);
 			};
