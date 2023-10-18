@@ -1,3 +1,4 @@
+/** \file eventTests.cpp */
 #include "eventTests.h"
 
 namespace EventTests

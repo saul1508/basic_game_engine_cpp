@@ -3,14 +3,14 @@
 #include <spdlog/spdlog.h>
 
 
-enum class EventType {
+enum class EventType { //!< Enum storing all event types
 	None = 0,
 	WindowClose, WindowResize, WindowFocus, WindowLoseFocus, WindowMove,
 	KeyPress, KeyRealease, KeyType,
 	MouseButtonPress, MouseButtonRealease, MouseMove, MouseScroll
 };
 
-enum EventCategory {
+enum EventCategory { //!< Enum storing event category flags
 	None = 0,
 	EventCategoryWindow = 1 << 0, //00000001
 	EventCategoryInput = 1 << 1, //00000010
@@ -26,7 +26,7 @@ enum EventCategory {
 class Event {
 	public:
 		Event() {}; //!< Default constructor
-		Event(EventType type, int32_t categoryFlags) : m_eventType(type), m_categoryFlags(categoryFlags) {}
+		Event(EventType type, int32_t categoryFlags) : m_eventType(type), m_categoryFlags(categoryFlags) {} //!< Constuctor
 		EventType getEventType() const { return m_eventType; }	//!< Gets the event type
 		int32_t getCategoryFlags() const { return m_categoryFlags; } //!< Gets the event category
 		inline bool handled() const { return m_handled; } //!< Checks whether event has been handled

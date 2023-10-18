@@ -6,11 +6,11 @@ namespace Engine {
 	//* \class ChronoTimer */
 	class ChronoTimer : public Timer {
 		public:
-			inline void start() override { m_startPoint = std::chrono::high_resolution_clock::now(); }
-			inline void reset() override { m_startPoint = std::chrono::high_resolution_clock::now(); }
-			float getElapsedTime() {
+			inline void start() override { m_startPoint = std::chrono::high_resolution_clock::now(); } //!< Overriden start method to start the ChronoTimer
+			inline void reset() override { m_startPoint = std::chrono::high_resolution_clock::now(); } //!< Overriden reset method to reset the ChronoTimer
+			float getElapsedTime() { //!< Gets time elapsed since start
 				m_endPoint = std::chrono::high_resolution_clock::now();
-				std::chrono::duration<float, std::milli> elapsed = m_endPoint - m_startPoint; //!< Calculates the difference
+				std::chrono::duration<float, std::milli> elapsed = m_endPoint - m_startPoint; // Calculates the difference
 				return elapsed.count(); // Returns elapsed time in milliseconds
 			}
 		private:
