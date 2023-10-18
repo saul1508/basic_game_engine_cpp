@@ -42,7 +42,6 @@ namespace Engine {
 	public:
 		virtual ~Application(); //!< Deconstructor
 		inline static Application& getInstance() { return *s_instance; } //!< Instance getter from singleton pattern
-		void onEvent(Event& e); //!> Called when an event happends
 		void run(); //!< Main loop
 
 	};

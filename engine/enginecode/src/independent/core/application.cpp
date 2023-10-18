@@ -29,14 +29,14 @@ namespace Engine {
 		m_randNumSystem->start();
 
 		//Reset timer
-#ifdef NG_PLATFORM_WINDOWS
-		m_timer.reset(new WinTimer);
-#else
+//#ifdef NG_PLATFORM_WINDOWS
+//		m_timer.reset(new WinTimer);
+//#else
 		m_timer.reset(new ChronoTimer);
-#endif
+//#endif
 		m_timer->start();
 	
-		m_eventHandler.setOnWindowClose([this](const WindowCloseEvent& e) {this->onWindowClose(e);});
+		m_eventHandler.setOnWindowClose([this](WindowCloseEvent& e) {this->onWindowClose(e);});
 
 	}
 
@@ -53,6 +53,7 @@ namespace Engine {
 	void Application::onWindowClose(WindowCloseEvent& e) {
 		Log::trace("Closing application");
 		m_running = false;
+		e.handle(true);
 	}
 	void Application::onWindowResize(WindowResizeEvent& e) {
 		Log::trace("Resized window to {0} by {1}", e.getWidth(), e.getHeight());
@@ -99,14 +100,16 @@ namespace Engine {
 		while (m_running)
 		{
 			timeStep = m_timer->getElapsedTime();
-			accumulatedTime += timeStep;
 			m_timer->reset();
 
+			accumulatedTime += timeStep;
+
+
 			//Log::trace("Hello World! {0} {1}", 42, "I am a string");
-			//Log::trace("FPS {0}", 1.0f / timeStep);
+			Log::trace("FPS {0} {1}", 1.0f / timeStep,  accumulatedTime);
 			//Log::trace("{0}", RandNumGenerator::normalInt(10.f, 2.5f));
 			//Log::trace("{0}", RandNumGenerator::uniformIntBetween(-10, 10));
-			if (accumulatedTime > 10.0f) {
+			if (accumulatedTime > 3000.0f) {
 
 				WindowCloseEvent close;
 
@@ -120,8 +123,5 @@ namespace Engine {
 		};
 	}
 
-	void Application::onEvent(Event& e) {
-		
-	}
 
 }

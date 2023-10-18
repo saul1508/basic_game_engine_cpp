@@ -33,8 +33,8 @@ namespace Engine {
 	{
 		s_consoleLogger->info("Stopping console logger");
 		s_consoleLogger.reset();
-		s_fileLogger->info("Stopping file logger");
-		s_fileLogger.reset();
+		//s_fileLogger->info("Stopping file logger");
+		//s_fileLogger.reset();
 	}
 
 
