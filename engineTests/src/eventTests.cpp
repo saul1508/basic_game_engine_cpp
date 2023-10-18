@@ -144,17 +144,62 @@ namespace EventTests
 
 	}
 
-	TEST(KeyPress, callback)
+	TEST(WinMove, callback)
 	{
 		init();
 
 		bool before = callbackChecks[4];
 
+		Engine::WindowMoveEvent e(500, 120);
+		auto& callback = handler->getOnWindowMove();
+		callback(e);
+
+		bool after = callbackChecks[4];
+		EXPECT_FALSE(before);
+		EXPECT_TRUE(after);
+
+	}
+
+	TEST(WinMove, handle)
+	{
+		init();
+
+		Engine::WindowMoveEvent e(500, 120);
+		bool before = e.handled();
+
+		auto& callback = handler->getOnWindowMove();
+		callback(e);
+
+		bool after = e.handled();
+		EXPECT_FALSE(before);
+		EXPECT_TRUE(after);
+
+	}
+
+	TEST(WinMove, data)
+	{
+		init();
+
+		Engine::WindowMoveEvent e(500, 120);
+
+		int32_t xPos = e.getNewXPos();
+		int32_t yPos = e.getNewYPos();
+
+		EXPECT_EQ(xPos, 500);
+		EXPECT_EQ(yPos, 120);
+	}
+
+	TEST(KeyPress, callback)
+	{
+		init();
+
+		bool before = callbackChecks[5];
+
 		Engine::KeyPressEvent e(52, 3);
 		auto& callback = handler->getOnKeyPress();
 		callback(e);
 
-		bool after = callbackChecks[4];
+		bool after = callbackChecks[5];
 		EXPECT_FALSE(before);
 		EXPECT_TRUE(after);
 
@@ -193,13 +238,13 @@ namespace EventTests
 	{
 		init();
 
-		bool before = callbackChecks[5];
+		bool before = callbackChecks[6];
 
 		Engine::KeyReleaseEvent e(14);
 		auto& callback = handler->getOnKeyRelease();
 		callback(e);
 
-		bool after = callbackChecks[5];
+		bool after = callbackChecks[6];
 		EXPECT_FALSE(before);
 		EXPECT_TRUE(after);
 
@@ -236,13 +281,13 @@ namespace EventTests
 	{
 		init();
 
-		bool before = callbackChecks[6];
+		bool before = callbackChecks[7];
 
 		Engine::KeyTypeEvent e(31);
 		auto& callback = handler->getOnKeyType();
 		callback(e);
 
-		bool after = callbackChecks[6];
+		bool after = callbackChecks[7];
 		EXPECT_FALSE(before);
 		EXPECT_TRUE(after);
 
@@ -279,13 +324,13 @@ namespace EventTests
 	{
 		init();
 
-		bool before = callbackChecks[7];
+		bool before = callbackChecks[8];
 
 		Engine::MouseButtonPressEvent e(0);
 		auto& callback = handler->getOnMouseButtonPress();
 		callback(e);
 
-		bool after = callbackChecks[7];
+		bool after = callbackChecks[8];
 		EXPECT_FALSE(before);
 		EXPECT_TRUE(after);
 
@@ -322,13 +367,13 @@ namespace EventTests
 	{
 		init();
 
-		bool before = callbackChecks[8];
+		bool before = callbackChecks[9];
 
 		Engine::MouseButtonReleaseEvent e(0);
 		auto& callback = handler->getOnMouseButtonRelease();
 		callback(e);
 
-		bool after = callbackChecks[8];
+		bool after = callbackChecks[9];
 		EXPECT_FALSE(before);
 		EXPECT_TRUE(after);
 
@@ -365,13 +410,13 @@ namespace EventTests
 	{
 		init();
 
-		bool before = callbackChecks[9];
+		bool before = callbackChecks[10];
 
 		Engine::MouseMoveEvent e(45, 108);
 		auto& callback = handler->getOnMouseMove();
 		callback(e);
 
-		bool after = callbackChecks[9];
+		bool after = callbackChecks[10];
 		EXPECT_FALSE(before);
 		EXPECT_TRUE(after);
 
@@ -410,13 +455,13 @@ namespace EventTests
 	{
 		init();
 
-		bool before = callbackChecks[10];
+		bool before = callbackChecks[11];
 
 		Engine::MouseScrollEvent e(50);
 		auto& callback = handler->getOnMouseScroll();
 		callback(e);
 
-		bool after = callbackChecks[10];
+		bool after = callbackChecks[11];
 		EXPECT_FALSE(before);
 		EXPECT_TRUE(after);
 
