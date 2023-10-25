@@ -18,9 +18,9 @@ namespace Engine {
 			s_instance = this;
 		}
 
-		//Start systems
+		// Start systems
 
-		//Start logger
+		// Start logger
 		m_log.reset(new Log);
 		m_log->start();
 
@@ -28,13 +28,18 @@ namespace Engine {
 		m_randNumSystem.reset(new RandNumGenerator);
 		m_randNumSystem->start();
 
-		//Reset timer
+		// Start timer system
 //#ifdef NG_PLATFORM_WINDOWS
 //		m_timer.reset(new WinTimer);
 //#else
 		m_timer.reset(new ChronoTimer);
 //#endif
 		m_timer->start();
+
+		// Start glfw system
+		m_glfwSystem.reset(new GLFWSystem);
+		m_glfwSystem->start();
+
 	
 		m_eventHandler.setOnWindowClose([this](WindowCloseEvent& e) {this->onWindowClose(e);});
 
@@ -48,6 +53,8 @@ namespace Engine {
 		m_randNumSystem->stop();
 		//Stop logger
 		m_log->stop();
+		//Stop glfw system
+		m_glfwSystem->stop();
 	}
 
 	void Application::onWindowClose(WindowCloseEvent& e) {
@@ -106,7 +113,7 @@ namespace Engine {
 
 
 			//Log::trace("Hello World! {0} {1}", 42, "I am a string");
-			Log::trace("FPS {0} {1}", 1.0f / timeStep,  accumulatedTime);
+			//Log::trace("FPS {0} {1}", 1.0f / timeStep,  accumulatedTime);
 			//Log::trace("{0}", RandNumGenerator::normalInt(10.f, 2.5f));
 			//Log::trace("{0}", RandNumGenerator::uniformIntBetween(-10, 10));
 			if (accumulatedTime > 3000.0f) {

@@ -1,10 +1,12 @@
 /** \file application.h */
 #pragma once
+
 #include "systems/log.h"
 #include "systems/randNumGenerator.h"
 #include "core/timer.h"
 #include "core/chronoTimer.h"
 #include "platforms/windows/winTimer.h"
+#include "platforms/glfw/glfwSystem.h"
 #include "events/event.h"
 #include "events/windowEvents.h"
 #include "events/keyEvents.h"
@@ -21,6 +23,7 @@ namespace Engine {
 		std::shared_ptr<Timer> m_timer; //!< Timer system attribute
 		std::shared_ptr<Log> m_log; //!< Log system attribute
 		std::shared_ptr<RandNumGenerator> m_randNumSystem; //!< Random number generator system attribute
+		std::shared_ptr<GLFWSystem> m_glfwSystem; //!< GLFW system for windows
 
 		EventHandler m_eventHandler; //!< Event Handler sttribute
 		void onWindowClose(WindowCloseEvent& e); //!< Method for when the window is closed
