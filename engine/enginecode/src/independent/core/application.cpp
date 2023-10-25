@@ -1,6 +1,7 @@
 /** \file application.cpp */
 
 #include "engine_pch.h"
+#include <glad/glad.h>
 #include "core/application.h"
 
 #ifdef NG_PLATFORM_WINDOWS
@@ -40,9 +41,22 @@ namespace Engine {
 		m_glfwSystem.reset(new GLFWSystem);
 		m_glfwSystem->start();
 
-	
-		m_eventHandler.setOnWindowClose([this](WindowCloseEvent& e) {this->onWindowClose(e);});
+		m_winProp.title = "My Window";
+		m_window.reset(new Window(m_winProp));
 
+		// Setup callbacks
+		m_window->getEventHandler().setOnWindowClose([this](WindowCloseEvent& e) {this->onWindowClose(e);});
+		m_window->getEventHandler().setOnWindowResize([this](WindowResizeEvent& e) {this->onWindowResize(e);});
+		m_window->getEventHandler().setOnWindowFocus([this](WindowFocusEvent& e) {this->onWindowFocus(e);});
+		m_window->getEventHandler().setOnWindowLose([this](WindowLoseFocusEvent& e) {this->onWindowLoseFocus(e);});
+		m_window->getEventHandler().setOnWindowResize([this](WindowResizeEvent& e) {this->onWindowResize(e);});
+		m_window->getEventHandler().setOnMouseButtonPress([this](MouseButtonPressEvent& e) {this->onMouseButtonPress(e);});
+		m_window->getEventHandler().setOnMouseButtonRelease([this](MouseButtonReleaseEvent& e) {this->onMouseButtonRelease(e);});
+		m_window->getEventHandler().setOnMouseMove([this](MouseMoveEvent& e) {this->onMouseMove(e);});
+		m_window->getEventHandler().setOnMouseScroll([this](MouseScrollEvent& e) {this->onMouseScroll(e);});
+		m_window->getEventHandler().setOnKeyPress([this](KeyPressEvent& e) {this->onKeyPress(e);});
+		m_window->getEventHandler().setOnKeyRelease([this](KeyReleaseEvent& e) {this->onKeyRelease(e);});
+		m_window->getEventHandler().setOnKeyType([this](KeyTypeEvent& e) {this->onKeyType(e);});
 	}
 
 	Application::~Application()
@@ -74,7 +88,6 @@ namespace Engine {
 	void Application::onWindowMove(WindowMoveEvent& e) {
 		Log::trace("Moved window to x:{0}, y:{1}", e.getNewXPos(), e.getNewYPos());
 	}
-
 	void Application::onKeyPress(KeyPressEvent& e) {
 		Log::trace("{0} key pressed {1} times", e.getKeyCode(), e.getRepeatCount());
 	}
@@ -84,7 +97,6 @@ namespace Engine {
 	void Application::onKeyType(KeyTypeEvent& e) {
 		Log::trace("{0} key typed", e.getKeyCode());
 	}
-
 	void Application::onMouseButtonPress(MouseButtonPressEvent& e) {
 		Log::trace("Mouse button {0} pressed", e.getButton());
 	}
@@ -106,27 +118,24 @@ namespace Engine {
 
 		while (m_running)
 		{
-			timeStep = m_timer->getElapsedTime();
-			m_timer->reset();
+			//timeStep = m_timer->getElapsedTime();
+			//accumulatedTime += timeStep;
 
-			accumulatedTime += timeStep;
-
+			glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 
 			//Log::trace("Hello World! {0} {1}", 42, "I am a string");
 			//Log::trace("FPS {0} {1}", 1.0f / timeStep,  accumulatedTime);
 			//Log::trace("{0}", RandNumGenerator::normalInt(10.f, 2.5f));
 			//Log::trace("{0}", RandNumGenerator::uniformIntBetween(-10, 10));
-			if (accumulatedTime > 3000.0f) {
 
-				WindowCloseEvent close;
+			/*if (accumulatedTime > 3000.0f) {
 
-				auto& callback = m_eventHandler.getOnWindowClose();
-				WindowCloseEvent wce;
 
-				callback(wce);
+			}*/
 
-			}
-
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			m_window->onUpdate(timeStep);
+			m_timer->reset();
 		};
 	}
 

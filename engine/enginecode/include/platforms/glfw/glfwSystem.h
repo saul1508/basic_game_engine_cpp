@@ -10,10 +10,10 @@ namespace Engine {
 	/** \class GLFWSystem */
 	class GLFWSystem : public System {
 	public:
-		virtual void start(SystemSignal init = SystemSignal::None, ...) override { //!< Start the glfwSystem
+		virtual void start(SystemSignal init = SystemSignal::None, ...) override { //!< Overridden method to start the glfwSystem
 			if(!glfwInit()) Log::error("GLFW did not initialise"); 
 		} 
-		virtual void stop(SystemSignal close = SystemSignal::None, ...) override { 
+		virtual void stop(SystemSignal close = SystemSignal::None, ...) override { //!< Overridden method to stop the glfwSystem
 			glfwTerminate();
 		}
 	};

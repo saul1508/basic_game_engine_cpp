@@ -7,6 +7,7 @@
 #include "core/chronoTimer.h"
 #include "platforms/windows/winTimer.h"
 #include "platforms/glfw/glfwSystem.h"
+#include "platforms/glfw/window.h"
 #include "events/event.h"
 #include "events/windowEvents.h"
 #include "events/keyEvents.h"
@@ -16,16 +17,19 @@
 /** \class ApplicationFundemental class of the engine. A singleton which runs the game loop infinitely. */
 
 namespace Engine {
-	class Application
+	class Application 
 	{
 	protected:
 		Application(); //!< Constructor for Application
 		std::shared_ptr<Timer> m_timer; //!< Timer system attribute
 		std::shared_ptr<Log> m_log; //!< Log system attribute
 		std::shared_ptr<RandNumGenerator> m_randNumSystem; //!< Random number generator system attribute
-		std::shared_ptr<GLFWSystem> m_glfwSystem; //!< GLFW system for windows
+		std::shared_ptr<GLFWSystem> m_glfwSystem; //!< GLFW system for windows attribute
+		std::shared_ptr<Window> m_window; //!< Main window attrivute
 
-		EventHandler m_eventHandler; //!< Event Handler sttribute
+		WindowProperties m_winProp; //!< Windows properties attribute
+		EventHandler m_eventHandler; //!< Event Handler attribute
+
 		void onWindowClose(WindowCloseEvent& e); //!< Method for when the window is closed
 		void onWindowResize(WindowResizeEvent& e); //!< Method for when the window is resized
 		void onWindowFocus(WindowFocusEvent& e); //!< Method for when the window is focussed
