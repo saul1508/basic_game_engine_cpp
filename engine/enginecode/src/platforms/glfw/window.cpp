@@ -69,7 +69,7 @@ namespace Engine {
 					callback(e);
 				} else if (action == GLFW_REPEAT) {
 					auto& callback = handler->getOnKeyPress();
-					KeyPressEvent e(key, 0);
+					KeyPressEvent e(key, 1);
 					callback(e);
 				} else if (action == GLFW_RELEASE) {
 					auto& callback = handler->getOnKeyRelease();
@@ -101,13 +101,6 @@ namespace Engine {
 				callback(e);
 			});
 
-		//glfwSetWindowPos(m_native,
-		//	[](GLFWwindow* win, double xpos, double ypos) {
-		//		EventHandler* handler = (EventHandler*)glfwGetWindowUserPointer(win);
-		//		auto& callback = handler->getOnMouseMove();
-		//		MouseMoveEvent e(xpos, ypos);
-		//		callback(e);
-		//	});
 			
 	}
 

@@ -49,7 +49,7 @@ namespace Engine {
 		m_window->getEventHandler().setOnWindowResize([this](WindowResizeEvent& e) {this->onWindowResize(e);});
 		m_window->getEventHandler().setOnWindowFocus([this](WindowFocusEvent& e) {this->onWindowFocus(e);});
 		m_window->getEventHandler().setOnWindowLose([this](WindowLoseFocusEvent& e) {this->onWindowLoseFocus(e);});
-		m_window->getEventHandler().setOnWindowResize([this](WindowResizeEvent& e) {this->onWindowResize(e);});
+		m_window->getEventHandler().setOnWindowMove([this](WindowMoveEvent& e) { this->onWindowMove(e);});
 		m_window->getEventHandler().setOnMouseButtonPress([this](MouseButtonPressEvent& e) {this->onMouseButtonPress(e);});
 		m_window->getEventHandler().setOnMouseButtonRelease([this](MouseButtonReleaseEvent& e) {this->onMouseButtonRelease(e);});
 		m_window->getEventHandler().setOnMouseMove([this](MouseMoveEvent& e) {this->onMouseMove(e);});
@@ -57,6 +57,9 @@ namespace Engine {
 		m_window->getEventHandler().setOnKeyPress([this](KeyPressEvent& e) {this->onKeyPress(e);});
 		m_window->getEventHandler().setOnKeyRelease([this](KeyReleaseEvent& e) {this->onKeyRelease(e);});
 		m_window->getEventHandler().setOnKeyType([this](KeyTypeEvent& e) {this->onKeyType(e);});
+
+		// Set input poller
+		InputPoller::setNativeWindow(m_window->getNativeWindow());
 	}
 
 	Application::~Application()
@@ -78,36 +81,47 @@ namespace Engine {
 	}
 	void Application::onWindowResize(WindowResizeEvent& e) {
 		Log::trace("Resized window to {0} by {1}", e.getWidth(), e.getHeight());
+		e.handle(true);
 	}
 	void Application::onWindowFocus(WindowFocusEvent& e) {
 		Log::trace("Focussed window");
+		e.handle(true);
 	}
 	void Application::onWindowLoseFocus(WindowLoseFocusEvent& e) {
 		Log::trace("Unfocussed window");
+		e.handle(true);
 	}
 	void Application::onWindowMove(WindowMoveEvent& e) {
 		Log::trace("Moved window to x:{0}, y:{1}", e.getNewXPos(), e.getNewYPos());
+		e.handle(true);
 	}
 	void Application::onKeyPress(KeyPressEvent& e) {
 		Log::trace("{0} key pressed {1} times", e.getKeyCode(), e.getRepeatCount());
+		e.handle(true);
 	}
 	void Application::onKeyRelease(KeyReleaseEvent& e) {
 		Log::trace("{0} key released", e.getKeyCode());
+		e.handle(true);
 	}
 	void Application::onKeyType(KeyTypeEvent& e) {
 		Log::trace("{0} key typed", e.getKeyCode());
+		e.handle(true);
 	}
 	void Application::onMouseButtonPress(MouseButtonPressEvent& e) {
 		Log::trace("Mouse button {0} pressed", e.getButton());
+		e.handle(true);
 	}
 	void Application::onMouseButtonRelease(MouseButtonReleaseEvent& e) {
 		Log::trace("Mouse button {0} released", e.getButton());
+		e.handle(true);
 	}
 	void Application::onMouseScroll(MouseScrollEvent& e) {
 		Log::trace("Mouse scrolled to an offset of {0}", e.getOffset());
+		e.handle(true);
 	}
 	void Application::onMouseMove(MouseMoveEvent& e) {
 		Log::trace("Mouse moved to x:{0} y:{1}", e.getNewXPos(), e.getNewYPos());
+		e.handle(true);
 	}
 
 
@@ -133,7 +147,12 @@ namespace Engine {
 
 			}*/
 
+			if (InputPoller::isKeyPressed(NG_KEY_ESCAPE)) {
+				m_running = false;
+			}
+
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 			m_window->onUpdate(timeStep);
 			m_timer->reset();
 		};
