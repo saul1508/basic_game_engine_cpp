@@ -1,7 +1,7 @@
 /** \file myScene.cpp */
 #include "engine_pch.h"
 #include "platforms/openGL/myScene.h"
-#include <glad/glad.h>
+//#include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 #include "systems/log.h"
 
