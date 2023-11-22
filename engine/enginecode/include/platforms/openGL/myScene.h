@@ -5,10 +5,11 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <vector>
+#include "systems/log.h"
 
 /** \class MyScene.h */
-
-class MyScene {
+namespace Engine {
+	class MyScene {
 	public:
 		MyScene();
 	private:
@@ -93,7 +94,7 @@ class MyScene {
 			22, 23, 20
 		};
 
-		glm::mat4 m_models;
+		std::vector<glm::mat4> m_models;
 		glm::mat4 m_view;
 		glm::mat4 m_projection;
 		std::string FCVert, FCFrag;
@@ -103,4 +104,6 @@ class MyScene {
 		uint32_t cubeVAO, cubeVBO, cubeIBO;
 		uint32_t letterTexture, numberTexture;
 		int32_t width, height, channels;
-};
+	};
+}
+
