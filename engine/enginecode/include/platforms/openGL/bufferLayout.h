@@ -25,3 +25,9 @@ class BufferLayout {
 		uint32_t prevOffset = 0;
 		uint32_t offset;
 };
+
+BufferLayout TPLayout{
+	{ShaderDataType::Float3},
+	{ShaderDataType::Float3},
+	{ShaderDataType::Float2}
+};
