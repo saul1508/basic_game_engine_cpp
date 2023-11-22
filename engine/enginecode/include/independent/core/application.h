@@ -15,6 +15,7 @@
 #include "events/eventHandler.h"
 #include "platforms/glfw/inputPoller.h"
 #include "platforms/glfw/glfwCodes.h"
+#include "core/inputPoller.h"
 
 /** \class ApplicationFundemental class of the engine. A singleton which runs the game loop infinitely. */
 

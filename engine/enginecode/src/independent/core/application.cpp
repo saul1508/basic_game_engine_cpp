@@ -66,6 +66,7 @@ namespace Engine {
 
 		// Set input poller
 		InputPoller::setNativeWindow(m_window->getNativeWindow());
+
 	}
 
 	Application::~Application()
@@ -558,6 +559,8 @@ namespace Engine {
 
 
 			}*/
+
+			if (InputPoller::isKeyPressed(NG_KEY_W)) Log::error("W Pressed");
 
 			if (InputPoller::isKeyPressed(NG_KEY_ESCAPE)) {
 				m_running = false;
