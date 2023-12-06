@@ -1,5 +1,5 @@
 #include "engine_pch.h"
-#include "texture.h"
+#include "platforms/openGL/texture.h"
 
 Texture::Texture(const char* filepath, uint32_t slot) {
 

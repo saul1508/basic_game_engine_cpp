@@ -29,9 +29,9 @@ namespace Engine {
 		}
 		return glm::vec2(-1, -1);
 	}
-	void InputPoller::setNativeWindow(GLFWwindow* nativeWin)
+	void InputPoller::setNativeWindow(void* nativeWin)
 	{
-		s_window = nativeWin;
+		s_window = static_cast<GLFWwindow*>(nativeWin);
 	}
 }
 

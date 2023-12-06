@@ -12,7 +12,7 @@ namespace Engine {
 		static bool isKeyPressed(int32_t keyCode); //!< Method for if a key is pressed
 		static bool isMouseButtonPressed(int32_t mouseButton); //!< Method for if a mouse button is pressed
 		static glm::vec2 getMousePosition(); //!< Getter method for the mouse position
-		static void setNativeWindow(GLFWwindow* nativeWin); //!< Setter method for the glfw native window
+		static void setNativeWindow(void* nativeWin); //!< Setter method for the glfw native window
 		inline static float getMouseX() { return getMousePosition().x; } //!< Method to get the x position of the mouse
 		inline static float getMouseY() { return getMousePosition().y; } //!< Methof to get the y position of the mouse
 	private:

@@ -1,5 +1,5 @@
 #include "engine_pch.h"
-#include "shader.h"
+#include "platforms/openGL/shader.h"
 
 Shader::Shader(const char* vertexFilePath, const char* fragmentFilePath)
 {
@@ -40,7 +40,7 @@ void Shader::uploadFloat3(const char* name, const glm::vec3& value)
 void Shader::uploadFloat4(const char* name, const glm::vec4& value)
 {
 	uint32_t uniformLocation = glGetUniformLocation(m_openGLID, name);
-	glUniform4f(uniformLocation, value.x, value.y, value.z, value.);
+	glUniform4f(uniformLocation, value.x, value.y, value.z, value.w);
 }
 
 void Shader::uploadMat4(const char* name, const glm::mat4& value)
