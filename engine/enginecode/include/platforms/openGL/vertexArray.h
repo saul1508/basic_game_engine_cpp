@@ -19,11 +19,11 @@ namespace Engine {
 			void addVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer); //!< Method to add a vertex buffer to the vertex array
 			void addIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer); //!< Method to add an index buffer to the vertex array
 			inline std::vector<std::shared_ptr<VertexBuffer>> getVertexBuffers() const { return m_vertexBuffers; } //!< Getter method for vertex buffers
-			inline std::vector<std::shared_ptr<IndexBuffer>> getIndexBuffers() const { return m_indexBuffers; } //!< Getter method for index buffers
-			inline uint32_t getDrawCount() const {}; //!< Getter method for the draw count
+			inline std::shared_ptr<IndexBuffer> getIndexBuffers() const { return m_indexBuffers; } //!< Getter method for index buffers
+			inline uint32_t getDrawCount() const { return m_indexBuffers->getCount(); } //!< Getter method for the draw count
 	    private:
 			std::vector<std::shared_ptr<VertexBuffer>> m_vertexBuffers; //!< Vector attribute for the vertex buffers
-			std::vector<std::shared_ptr<IndexBuffer>> m_indexBuffers; //!< Vector attribute for the index buffers
+			std::shared_ptr<IndexBuffer> m_indexBuffers; //!< Vector attribute for the index buffers
 			uint32_t m_openGLID; //!< OpenGL ID attribute
 			uint32_t m_attributeIndex = 0; //!< Attribute index attribute
 	};

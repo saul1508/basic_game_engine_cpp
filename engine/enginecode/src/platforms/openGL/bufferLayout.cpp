@@ -4,8 +4,8 @@
 void BufferLayout::calcStrideAndOffsets()
 {
 	for (int i = 0; i < m_elements.size(); i++) {
-		offset = i * prevOffset;
-		prevOffset += sizeof(float);
+		m_elements[i].m_offset = prevOffset;
+		prevOffset += m_elements[i].m_size;
 	}
 	m_stride = prevOffset;
 }

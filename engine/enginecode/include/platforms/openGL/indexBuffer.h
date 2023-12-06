@@ -2,9 +2,9 @@
 #pragma once
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-
-/** \class IndexBuffer */
-class IndexBuffer {
+namespace Engine {
+	/** \class IndexBuffer */
+	class IndexBuffer {
 	public:
 		IndexBuffer(uint32_t* indeces, uint32_t count); //!< Index Buffer constructor
 		~IndexBuffer(); //!< Index Buffer destructor
@@ -16,4 +16,5 @@ class IndexBuffer {
 	private:
 		uint32_t m_openGLID; //!< OpenGL ID attribute
 		uint32_t m_count; //!< Count attribute
-};
+	};
+}
