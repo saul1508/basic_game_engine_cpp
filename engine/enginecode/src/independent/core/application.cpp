@@ -3,14 +3,12 @@
 #include "engine_pch.h"
 #include <glad/glad.h>
 #include "core/application.h"
-
+#include <glm/gtc/matrix_transform.hpp>
+#include <filesystem>
 #ifdef NG_PLATFORM_WINDOWS
 	#include "platforms/windows/winTimer.h"
 #endif
-
 #include <glm/gtc/type_ptr.hpp>
-
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -20,13 +18,11 @@ namespace Engine {
 
 	Application::Application()
 	{
-		if (s_instance == nullptr)
-		{
+		if (s_instance == nullptr) {
 			s_instance = this;
 		}
 
 		// Start systems
-
 		// Start logger
 		m_log.reset(new Log);
 		m_log->start();
@@ -72,7 +68,6 @@ namespace Engine {
 	Application::~Application()
 	{
 		// Stop systems
-
 		//Stop random number system
 		m_randNumSystem->stop();
 		//Stop logger
@@ -130,7 +125,6 @@ namespace Engine {
 		Log::trace("Mouse moved to x:{0} y:{1}", e.getNewXPos(), e.getNewYPos());
 		e.handle(true);
 	}
-
 
 	void Application::run()
 	{
@@ -467,7 +461,9 @@ namespace Engine {
 		);
 		m_projection = glm::perspective(glm::radians(45.f), 1024.f / 800.f, 0.1f, 100.f);
 
-		m_models[0] = glm::translate(glm::mat4(1.0f), glm::vec3(-2.f, 0.f, -6.f));
+		glm::vec3 pos(-2.f, 0.f, -6.f);
+		float rot = 0.f;
+
 		m_models[1] = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, -6.f));
 		m_models[2] = glm::translate(glm::mat4(1.0f), glm::vec3(2.f, 0.f, -6.f));
 
@@ -555,10 +551,6 @@ namespace Engine {
 			//Log::trace("{0}", RandNumGenerator::normalInt(10.f, 2.5f));
 			//Log::trace("{0}", RandNumGenerator::uniformIntBetween(-10, 10));
 
-			/*if (accumulatedTime > 3000.0f) {
-
-
-			}*/
 
 			if (InputPoller::isKeyPressed(NG_KEY_W)) Log::error("W Pressed");
 
@@ -566,8 +558,24 @@ namespace Engine {
 				m_running = false;
 			}
 
+			//if (InputPoller::isKeyPressed(NG_KEY_W)) 
+			//if (InputPoller::isKeyPressed(NG_KEY_A)) 
+			//if (InputPoller::isKeyPressed(NG_KEY_S))
+			//if (InputPoller::isKeyPressed(NG_KEY_D)) 
+
 			// Do frame stuff
-			for (auto& model : m_models) { model = glm::rotate(model, timeStep, glm::vec3(0.f, 1.0, 0.f)); }
+			m_models[0] = glm::translate(glm::mat4(1.0f), pos) * glm::rotate(glm::mat4(1.0f), rot, glm::vec3(0.f, 1.f, 0.f));
+
+			if (InputPoller::isKeyPressed(NG_KEY_LEFT)) pos.x -= timeStep;
+			if (InputPoller::isKeyPressed(NG_KEY_RIGHT)) pos.x += timeStep;
+			if (InputPoller::isKeyPressed(NG_KEY_UP)) pos.y += timeStep;
+			if (InputPoller::isKeyPressed(NG_KEY_DOWN)) pos.y -= timeStep;
+
+			if (InputPoller::isKeyPressed(NG_KEY_J)) rot -= timeStep;
+			if (InputPoller::isKeyPressed(NG_KEY_L)) rot += timeStep;
+
+			m_models[1] = glm::rotate(m_models[1], timeStep, glm::vec3(0.f, 1.0, 0.f));
+			m_models[2] = glm::rotate(m_models[2], timeStep, glm::vec3(0.f, 1.0, 0.f));
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
