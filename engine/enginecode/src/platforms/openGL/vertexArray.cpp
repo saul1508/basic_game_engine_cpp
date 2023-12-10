@@ -4,6 +4,7 @@
 #include "systems/log.h"
 
 namespace Engine {
+
 	VertexArray::VertexArray()
 	{
 		glCreateVertexArrays(1, &m_openGLID);
@@ -24,8 +25,6 @@ namespace Engine {
 	void VertexArray::addVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
 	{
 		m_vertexBuffers.push_back(vertexBuffer);
-		//glEnableVertexAttribArray(0);
-		//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 		auto& layout = vertexBuffer->getLayout();
 		auto normalised = GL_FALSE;
 		for (auto& element : layout) {

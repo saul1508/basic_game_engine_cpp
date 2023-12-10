@@ -12,7 +12,7 @@ namespace Engine {
 		void unbind(); //!< Method to unbind the index buffer
 		inline uint32_t getID() const { return m_openGLID; } //!< Getter method for the openGL ID
 		inline uint32_t getCount() const { return m_count; } //!< Getter method got the index buffer count
-		void edit(uint32_t* indices, uint32_t count, uint32_t offset); //!< Method to edit the index buffer
+		void edit(uint32_t* indeces, uint32_t count, uint32_t offset); //!< Method to edit the index buffer
 	private:
 		uint32_t m_openGLID; //!< OpenGL ID attribute
 		uint32_t m_count; //!< Count attribute

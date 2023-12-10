@@ -2,7 +2,9 @@
 #pragma once
 #include "shaderDataTypes.h"
 
-/** \class BufferElement */
+/** \class BufferElement 
+* Holds data about a single element within a buffer layout
+*/
 class BufferElement {
 	public:
 		BufferElement(); //!< Default Constructor
@@ -12,5 +14,4 @@ class BufferElement {
 		uint32_t m_size; //!< Buffer size attribute;
 		uint32_t m_offset; //!< Buffer offset attribute
 		bool m_normalised; //!< Normalised attribute
-		
 };

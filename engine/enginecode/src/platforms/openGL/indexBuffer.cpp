@@ -26,9 +26,10 @@ namespace Engine {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void IndexBuffer::edit(uint32_t* indices, uint32_t count, uint32_t offset)
+	void IndexBuffer::edit(uint32_t* indeces, uint32_t count, uint32_t offset)
 	{
-
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_openGLID);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, sizeof(uint32_t) * count, indeces);
 	}
 
 }

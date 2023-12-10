@@ -5,7 +5,9 @@
 #include <vector>
 #include "bufferElement.h"
 
-/** \class BufferLayout */
+/** \class BufferLayout 
+* Abstraction of a buffer layout
+*/
 class BufferLayout {
 	public:
 		BufferLayout() {}; //!< Default constructor
@@ -17,7 +19,7 @@ class BufferLayout {
 		std::vector<BufferElement>::iterator begin() { return m_elements.begin(); } //!< Method for the start of the elements vector
 		std::vector<BufferElement>::iterator end() { return m_elements.end(); } //!< Method for the end of the elements vector
 		std::vector<BufferElement>::const_iterator begin() const { return m_elements.begin(); } //!< Method for the start of the elements vector
-			std::vector<BufferElement>::const_iterator end() const { return m_elements.end(); } //!< Method for the end of the elements vector
+		std::vector<BufferElement>::const_iterator end() const { return m_elements.end(); } //!< Method for the end of the elements vector
 	private:
 		std::vector<BufferElement> m_elements; //!< Buffer elements vector attribute 
 		uint32_t m_stride; //!< Stride attribute

@@ -3,16 +3,19 @@
 #include "engine_pch.h"
 #include <glad/glad.h>
 #include "core/application.h"
-#include <glm/gtc/matrix_transform.hpp>
+
 #include <filesystem>
 #include "platforms/openGL/vertexArray.h"
 #include "platforms/openGL/bufferLayout.h"
 #ifdef NG_PLATFORM_WINDOWS
 	#include "platforms/windows/winTimer.h"
 #endif
-#include <glm/gtc/type_ptr.hpp>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "platforms/openGL/vertexArray.h"
 
 namespace Engine {
 	// Set static vars
@@ -131,59 +134,58 @@ namespace Engine {
 	void Application::run()
 	{
 		float cubeVertices[8 * 24] = {
-	 0.5f,  0.5f, -0.5f,  0.f,  0.f, -1.f, 0.f,   0.f,  // Side 1
-	 0.5f, -0.5f, -0.5f,  0.f,  0.f, -1.f, 0.f,   0.5f,
-	-0.5f, -0.5f, -0.5f,  0.f,  0.f, -1.f, 0.33f, 0.5f,
-	-0.5f,  0.5f, -0.5f,  0.f,  0.f, -1.f, 0.33f, 0.f,
+			 0.5f,  0.5f, -0.5f,  0.f,  0.f, -1.f, 0.f,   0.f,  // Side 1
+			 0.5f, -0.5f, -0.5f,  0.f,  0.f, -1.f, 0.f,   0.5f,
+			-0.5f, -0.5f, -0.5f,  0.f,  0.f, -1.f, 0.33f, 0.5f,
+			-0.5f,  0.5f, -0.5f,  0.f,  0.f, -1.f, 0.33f, 0.f,
 
-	-0.5f, -0.5f,  0.5f,  0.f,  0.f,  1.f, 0.33f, 0.5f, // Side 2
-	 0.5f, -0.5f,  0.5f,  0.f,  0.f,  1.f, 0.66f, 0.5f,
-	 0.5f,  0.5f,  0.5f,  0.f,  0.f,  1.f, 0.66f, 0.f,
-	-0.5f,  0.5f,  0.5f,  0.f,  0.f,  1.f, 0.33f, 0.f,
+			-0.5f, -0.5f,  0.5f,  0.f,  0.f,  1.f, 0.33f, 0.5f, // Side 2
+			 0.5f, -0.5f,  0.5f,  0.f,  0.f,  1.f, 0.66f, 0.5f,
+			 0.5f,  0.5f,  0.5f,  0.f,  0.f,  1.f, 0.66f, 0.f,
+			-0.5f,  0.5f,  0.5f,  0.f,  0.f,  1.f, 0.33f, 0.f,
 
-	-0.5f, -0.5f, -0.5f,  0.f, -1.f,  0.f, 1.f,	  0.f,  //Side 3
-	 0.5f, -0.5f, -0.5f,  0.f, -1.f,  0.f, 0.66f, 0.f,
-	 0.5f, -0.5f,  0.5f,  0.f, -1.f,  0.f, 0.66f, 0.5f,
-	-0.5f, -0.5f,  0.5f,  0.f, -1.f,  0.f, 1.f,   0.5f,
+			-0.5f, -0.5f, -0.5f,  0.f, -1.f,  0.f, 1.f,	  0.f,  //Side 3
+			 0.5f, -0.5f, -0.5f,  0.f, -1.f,  0.f, 0.66f, 0.f,
+			 0.5f, -0.5f,  0.5f,  0.f, -1.f,  0.f, 0.66f, 0.5f,
+			-0.5f, -0.5f,  0.5f,  0.f, -1.f,  0.f, 1.f,   0.5f,
 
-	 0.5f,  0.5f,  0.5f,  0.f,  1.f,  0.f, 0.f,   0.5f, //Side 4
-	 0.5f,  0.5f, -0.5f,  0.f,  1.f,  0.f, 0.f,   1.f,
-	-0.5f,  0.5f, -0.5f,  0.f,  1.f,  0.f, 0.33f, 1.f,
-	-0.5f,  0.5f,  0.5f,  0.f,  1.f,  0.f, 0.33f, 0.5f,
+			 0.5f,  0.5f,  0.5f,  0.f,  1.f,  0.f, 0.f,   0.5f, //Side 4
+			 0.5f,  0.5f, -0.5f,  0.f,  1.f,  0.f, 0.f,   1.f,
+			-0.5f,  0.5f, -0.5f,  0.f,  1.f,  0.f, 0.33f, 1.f,
+			-0.5f,  0.5f,  0.5f,  0.f,  1.f,  0.f, 0.33f, 0.5f,
 
-	-0.5f,  0.5f,  0.5f, -1.f,  0.f,  0.f, 0.66f, 0.5f, //Side 5
-	-0.5f,  0.5f, -0.5f, -1.f,  0.f,  0.f, 0.33f, 0.5f,
-	-0.5f, -0.5f, -0.5f, -1.f,  0.f,  0.f, 0.33f, 1.f,
-	-0.5f, -0.5f,  0.5f, -1.f,  0.f,  0.f, 0.66f, 1.f,
+			-0.5f,  0.5f,  0.5f, -1.f,  0.f,  0.f, 0.66f, 0.5f, //Side 5
+			-0.5f,  0.5f, -0.5f, -1.f,  0.f,  0.f, 0.33f, 0.5f,
+			-0.5f, -0.5f, -0.5f, -1.f,  0.f,  0.f, 0.33f, 1.f,
+			-0.5f, -0.5f,  0.5f, -1.f,  0.f,  0.f, 0.66f, 1.f,
 
-	 0.5f, -0.5f, -0.5f,  1.f,  0.f,  0.f, 1.f,   1.f,  //Side 6
-	 0.5f,  0.5f, -0.5f,  1.f,  0.f,  0.f, 1.f,   0.5f,
-	 0.5f,  0.5f,  0.5f,  1.f,  0.f,  0.f, 0.66f, 0.5f,
-	 0.5f, -0.5f,  0.5f,  1.f,  0.f,  0.f, 0.66f, 1.f
-
+			 0.5f, -0.5f, -0.5f,  1.f,  0.f,  0.f, 1.f,   1.f,  //Side 6
+			 0.5f,  0.5f, -0.5f,  1.f,  0.f,  0.f, 1.f,   0.5f,
+			 0.5f,  0.5f,  0.5f,  1.f,  0.f,  0.f, 0.66f, 0.5f,
+			 0.5f, -0.5f,  0.5f,  1.f,  0.f,  0.f, 0.66f, 1.f
 		};
 		float pyramidVertices[6 * 16] = {
 			//	 <------ Pos ------>  <--- colour ---> 
-				-0.5f, -0.5f, -0.5f,  0.8f, 0.2f, 0.8f, //  square Magneta
-				 0.5f, -0.5f, -0.5f,  0.8f, 0.2f, 0.8f,
-				 0.5f, -0.5f,  0.5f,  0.8f, 0.2f, 0.8f,
-				-0.5f, -0.5f,  0.5f,  0.8f, 0.2f, 0.8f,
+			-0.5f, -0.5f, -0.5f,  0.8f, 0.2f, 0.8f, //  square Magneta
+			 0.5f, -0.5f, -0.5f,  0.8f, 0.2f, 0.8f,
+			 0.5f, -0.5f,  0.5f,  0.8f, 0.2f, 0.8f,
+			-0.5f, -0.5f,  0.5f,  0.8f, 0.2f, 0.8f,
 
-				-0.5f, -0.5f, -0.5f,  0.2f, 0.8f, 0.2f,  //triangle Green
-				-0.5f, -0.5f,  0.5f,  0.2f, 0.8f, 0.2f,
-				 0.0f,  0.5f,  0.0f,  0.2f, 0.8f, 0.2f,
+			-0.5f, -0.5f, -0.5f,  0.2f, 0.8f, 0.2f,  //triangle Green
+			-0.5f, -0.5f,  0.5f,  0.2f, 0.8f, 0.2f,
+			 0.0f,  0.5f,  0.0f,  0.2f, 0.8f, 0.2f,
 
-				-0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.f, //triangle Red
-				 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.f,
-				 0.0f,  0.5f,  0.0f,  1.0f, 0.0f, 0.f,
+			-0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.f, //triangle Red
+			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.f,
+			 0.0f,  0.5f,  0.0f,  1.0f, 0.0f, 0.f,
 
-				 0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.2f, //  triangle Yellow
-				 0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.2f,
-				 0.0f,  0.5f,  0.0f,  0.8f, 0.8f, 0.2f,
+			 0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.2f, //  triangle Yellow
+			 0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.2f,
+			 0.0f,  0.5f,  0.0f,  0.8f, 0.8f, 0.2f,
 
-				 0.5f, -0.5f, -0.5f,  0.f, 0.2f, 1.0f,//  triangle Blue
-				-0.5f, -0.5f, -0.5f,  0.f, 0.2f, 1.0f,
-				 0.0f,  0.5f,  0.0f,  0.f, 0.2f, 1.0f
+			 0.5f, -0.5f, -0.5f,  0.f, 0.2f, 1.0f,//  triangle Blue
+			-0.5f, -0.5f, -0.5f,  0.f, 0.2f, 1.0f,
+			 0.0f,  0.5f,  0.0f,  0.f, 0.2f, 1.0f
 		};
 
 		uint32_t pyramidIndices[3 * 6] =
@@ -216,11 +218,31 @@ namespace Engine {
 		std::string FCVert, FCFrag;
 		std::string TPVert, TPFrag;
 		uint32_t FCProgram, TPProgram;
-		uint32_t pyramidVAO, pyramidVBO, pyramidIBO;
 		uint32_t letterTexture, numberTexture;
 		int32_t width, height, channels;
 
-		glCreateVertexArrays(1, &pyramidVAO);
+		BufferLayout TPLayout{
+			{ShaderDataType::Float3},
+			{ShaderDataType::Float3},
+			{ShaderDataType::Float2}
+		};
+
+		std::shared_ptr<VertexArray> pyramidVAO;
+		std::shared_ptr<IndexBuffer> pyramidIBO;
+		std::shared_ptr<VertexBuffer> pyramidVBO;
+
+		pyramidVAO.reset(new VertexArray);
+		pyramidVBO.reset(new VertexBuffer(pyramidVertices, sizeof(pyramidVertices), TPLayout));
+		pyramidIBO.reset(new IndexBuffer(pyramidIndices, 3 * 6));
+
+		pyramidVAO->addVertexBuffer(pyramidVBO);
+		pyramidVAO->addIndexBuffer(pyramidIBO);
+
+		pyramidVAO->unbind();
+		pyramidIBO->unbind();
+		pyramidVBO->unbind();
+
+		/*glCreateVertexArrays(1, &pyramidVAO);
 		glBindVertexArray(pyramidVAO);
 
 		glCreateBuffers(1, &pyramidVBO);
@@ -235,14 +257,8 @@ namespace Engine {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-
-		BufferLayout TPLayout{
-			{ShaderDataType::Float3},
-			{ShaderDataType::Float3},
-			{ShaderDataType::Float2}
-		};
-
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));*/
+		
 		std::shared_ptr<VertexArray> cubeVAO;
 		std::shared_ptr<IndexBuffer> cubeIBO;
 		std::shared_ptr<VertexBuffer> cubeVBO;
@@ -257,27 +273,6 @@ namespace Engine {
 		cubeVAO->unbind();
 		cubeVBO->unbind();
 		cubeIBO->unbind();
-
-		// Cube
-		//glCreateVertexArrays(1, &cubeVAO);
-		//glBindVertexArray(cubeVAO);
-
-		//glCreateBuffers(1, &cubeVBO);
-		//glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-		//glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
-
-		//glCreateBuffers(1, &cubeIBO);
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeIBO);
-		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIndices), cubeIndices, GL_STATIC_DRAW);
-
-		//glEnableVertexAttribArray(0);
-		//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-
-		//glEnableVertexAttribArray(1);
-		/*glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));*/
 
 		FCVert = R"(
 		#version 440 core
@@ -414,7 +409,7 @@ namespace Engine {
 			return;
 		}
 
-		//Cube
+		// Vertex
 		GLuint TPVertShader = glCreateShader(GL_VERTEX_SHADER);
 
 		source = TPVert.c_str();
@@ -433,6 +428,7 @@ namespace Engine {
 			return;
 		}
 
+		// Fragment
 		GLuint TPFragShader = glCreateShader(GL_FRAGMENT_SHADER);
 
 		source = TPFrag.c_str();
@@ -488,22 +484,22 @@ namespace Engine {
 		m_models[1] = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, -6.f));
 		m_models[2] = glm::translate(glm::mat4(1.0f), glm::vec3(2.f, 0.f, -6.f));
 
-		glUseProgram(FCProgram);
-		glBindVertexArray(pyramidVAO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pyramidIBO);
+		//glUseProgram(FCProgram);
+		//pyramidVAO->bind();
+		//pyramidIBO->bind();
 
-		GLuint uniformLocation;
+		//GLuint uniformLocation;
 
-		uniformLocation = glGetUniformLocation(FCProgram, "u_model");;
-		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_models[0]));
+		//uniformLocation = glGetUniformLocation(FCProgram, "u_model");;
+		//glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_models[0]));
 
-		uniformLocation = glGetUniformLocation(FCProgram, "u_view");;
-		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_view));
+		//uniformLocation = glGetUniformLocation(FCProgram, "u_view");;
+		//glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_view));
 
-		uniformLocation = glGetUniformLocation(FCProgram, "u_projection");;
-		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_projection));
+		//uniformLocation = glGetUniformLocation(FCProgram, "u_projection");;
+		//glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_projection));
 
-		glDrawElements(GL_TRIANGLES, 3 * 6, GL_UNSIGNED_INT, nullptr);
+		//glDrawElements(GL_TRIANGLES, 3 * 6, GL_UNSIGNED_INT, nullptr);
 	
 
 		glGenTextures(1, &letterTexture);
@@ -527,7 +523,6 @@ namespace Engine {
 		}
 
 		stbi_image_free(data);
-
 
 		glGenTextures(1, &numberTexture);
 		glActiveTexture(GL_TEXTURE0 + 1);
@@ -601,7 +596,7 @@ namespace Engine {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			glUseProgram(FCProgram);
-			glBindVertexArray(pyramidVAO);
+			pyramidVAO->bind();
 
 			GLuint uniformLocation;
 
@@ -614,7 +609,7 @@ namespace Engine {
 			uniformLocation = glGetUniformLocation(FCProgram, "u_projection");
 			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_projection));
 
-			glDrawElements(GL_TRIANGLES, 3 * 6, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, pyramidVAO->getDrawCount(), GL_UNSIGNED_INT, nullptr);
 
 			glUseProgram(TPProgram);
 			cubeVAO->bind();
@@ -653,9 +648,9 @@ namespace Engine {
 			m_window->onUpdate(timeStep);
 		}
 
-		glDeleteVertexArrays(1, &pyramidVAO);
+		/*glDeleteVertexArrays(1, &pyramidVAO);
 		glDeleteBuffers(1, &pyramidVBO);
-		glDeleteBuffers(1, &pyramidIBO);
+		glDeleteBuffers(1, &pyramidIBO);*/
 
 		glDeleteProgram(FCProgram);
 		glDeleteProgram(TPProgram);
