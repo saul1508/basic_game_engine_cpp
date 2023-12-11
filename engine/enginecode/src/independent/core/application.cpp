@@ -261,204 +261,10 @@ namespace Engine {
 		cubeIBO->unbind();
 
 		std::shared_ptr<Shader> flatColourShader;
-		flatColourShader.reset(new Shader("./assets/shaders/flatColour.glsl"));
-
-		FCVert = R"(
-		#version 440 core
-			
-				layout(location = 0) in vec3 a_vertexPosition;
-				layout(location = 1) in vec3 a_vertexColour;
-				out vec3 fragmentColour;
-				uniform mat4 u_model;
-				uniform mat4 u_view;
-				uniform mat4 u_projection;
-				void main()
-				{
-					fragmentColour = a_vertexColour;
-					gl_Position =  u_projection * u_view * u_model * vec4(a_vertexPosition,1);
-				}
-	)";
-
-		FCFrag = R"(
-				#version 440 core
-			
-				layout(location = 0) out vec4 colour;
-				in vec3 fragmentColour;
-				void main()
-				{
-					colour = vec4(fragmentColour, 1.0);
-				}
-
-	)";
-
-		TPVert = R"(
-		#version 440 core
-			
-				layout(location = 0) in vec3 a_vertexPosition;
-				layout(location = 1) in vec3 a_vertexNormal;
-				layout(location = 2) in vec2 a_texCoord;
-				out vec3 fragmentPos;
-				out vec3 normal;
-				out vec2 texCoord;
-				uniform mat4 u_model;
-				uniform mat4 u_view;
-				uniform mat4 u_projection;
-				void main()
-				{
-					fragmentPos = vec3(u_model * vec4(a_vertexPosition, 1.0));
-					normal = mat3(transpose(inverse(u_model))) * a_vertexNormal;
-					texCoord = vec2(a_texCoord.x, a_texCoord.y);
-					gl_Position =  u_projection * u_view * u_model * vec4(a_vertexPosition,1.0);
-				}
-		)";
-		////
-		TPFrag = R"(
-		#version 440 core
-			
-				layout(location = 0) out vec4 colour;
-				in vec3 normal;
-				in vec3 fragmentPos;
-				in vec2 texCoord;
-				uniform vec3 u_lightPos; 
-				uniform vec3 u_viewPos; 
-				uniform vec3 u_lightColour;
-				uniform sampler2D u_texData;
-				void main()
-				{
-					float ambientStrength = 0.4;
-					vec3 ambient = ambientStrength * u_lightColour;
-					vec3 norm = normalize(normal);
-					vec3 lightDir = normalize(u_lightPos - fragmentPos);
-					float diff = max(dot(norm, lightDir), 0.0);
-					vec3 diffuse = diff * u_lightColour;
-					float specularStrength = 0.8;
-					vec3 viewDir = normalize(u_viewPos - fragmentPos);
-					vec3 reflectDir = reflect(-lightDir, norm);  
-					float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64);
-					vec3 specular = specularStrength * spec * u_lightColour;  
-					
-					colour = vec4((ambient + diffuse + specular), 1.0) * texture(u_texData, texCoord);
-				}
-	)";
-
-		// Pyramid
-		GLuint FCVertShader = glCreateShader(GL_VERTEX_SHADER);
-
-		const GLchar* source = FCVert.c_str();
-		glShaderSource(FCVertShader, 1, &source, 0);
-		glCompileShader(FCVertShader);
-
-		GLint isCompiled = 0;
-		glGetShaderiv(FCVertShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE) {
-			GLint maxLength = 0;
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(FCVertShader, maxLength, &maxLength, &infoLog[0]);
-			Log::error("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
-			glDeleteShader(FCVertShader);
-			return;
-		}
-
-		GLuint FCFragShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-		source = FCFrag.c_str();
-		glShaderSource(FCFragShader, 1, &source, 0);
-		glCompileShader(FCFragShader);
-
-		isCompiled = 0;
-		glGetShaderiv(FCFragShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE) {
-			GLint maxLength = 0;
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(FCFragShader, maxLength, &maxLength, &infoLog[0]);
-			Log::error("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
-			glDeleteShader(FCVertShader);
-			return;
-		}
-
-		FCProgram = glCreateProgram();
-		glAttachShader(FCProgram, FCVertShader);
-		glAttachShader(FCProgram, FCFragShader);
-		glLinkProgram(FCProgram);
-
-		GLint isLinked = 0;
-		glGetProgramiv(FCProgram, GL_LINK_STATUS, (int*)&isLinked);
-		if (isLinked == GL_FALSE) {
-			GLint maxLength = 0;
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(FCProgram, maxLength, &maxLength, &infoLog[0]);
-			Log::error("Shader linking error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteProgram(FCProgram);
-			glDeleteShader(FCVertShader);
-			glDeleteShader(FCFragShader);
-			return;
-		}
-
-		// Vertex
-		GLuint TPVertShader = glCreateShader(GL_VERTEX_SHADER);
-
-		source = TPVert.c_str();
-		glShaderSource(TPVertShader, 1, &source, 0);
-		glCompileShader(TPVertShader);
-
-		isCompiled = 0;
-		glGetShaderiv(TPVertShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE) {
-			GLint maxLength = 2048;
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(TPVertShader, maxLength, &maxLength, &infoLog[0]);
-			Log::error("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
-			glDeleteShader(TPVertShader);
-			return;
-		}
-
-		// Fragment
-		GLuint TPFragShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-		source = TPFrag.c_str();
-		glShaderSource(TPFragShader, 1, &source, 0);
-		glCompileShader(TPFragShader);
-
-		isCompiled = 0;
-		glGetShaderiv(TPFragShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE) {
-			GLint maxLength = 0;
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(TPFragShader, maxLength, &maxLength, &infoLog[0]);
-			Log::error("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteShader(TPFragShader);
-			return;
-		}
-
-		TPProgram = glCreateProgram();
-		glAttachShader(TPProgram, TPVertShader);
-		glAttachShader(TPProgram, TPFragShader);
-		glLinkProgram(TPProgram);
-
-		isLinked = 0;
-		glGetProgramiv(TPProgram, GL_LINK_STATUS, (int*)&isLinked);
-		if (isLinked == GL_FALSE) {
-			GLint maxLength = 0;
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(TPProgram, maxLength, &maxLength, &infoLog[0]);
-			Log::error("Shader linking error: {0}", std::string(infoLog.begin(), infoLog.end()));
-
-			glDeleteProgram(TPProgram);
-			glDeleteShader(TPVertShader);
-			glDeleteShader(TPFragShader);
-			return;
-		}
-
-		glDetachShader(TPProgram, TPVertShader);
-		glDetachShader(TPProgram, TPFragShader);
+		std::shared_ptr<Shader> texturedPhongShader;
+		//flatColourShader.reset(new Shader("./assets/shaders/flatColour.glsl"));
+		flatColourShader.reset(new Shader("./assets/shaders/flatColour.vert", "./assets/shaders/flatColour.frag"));
+		texturedPhongShader.reset(new Shader("./assets/shaders/texturedPhong.vert", "./assets/shaders/texturedPhong.frag"));
 
 		m_view = glm::lookAt(
 			glm::vec3(0.f, 0.f, 0.f),
@@ -472,24 +278,6 @@ namespace Engine {
 
 		m_models[1] = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, -6.f));
 		m_models[2] = glm::translate(glm::mat4(1.0f), glm::vec3(2.f, 0.f, -6.f));
-
-		//glUseProgram(FCProgram);
-		//pyramidVAO->bind();
-		//pyramidIBO->bind();
-
-		//GLuint uniformLocation;
-
-		//uniformLocation = glGetUniformLocation(FCProgram, "u_model");;
-		//glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_models[0]));
-
-		//uniformLocation = glGetUniformLocation(FCProgram, "u_view");;
-		//glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_view));
-
-		//uniformLocation = glGetUniformLocation(FCProgram, "u_projection");;
-		//glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_projection));
-
-		//glDrawElements(GL_TRIANGLES, 3 * 6, GL_UNSIGNED_INT, nullptr);
-	
 
 		glGenTextures(1, &letterTexture);
 		glBindTexture(GL_TEXTURE_2D, letterTexture);
@@ -563,63 +351,60 @@ namespace Engine {
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glUseProgram(FCProgram);
+			glUseProgram(flatColourShader->getID());
 			pyramidVAO->bind();
 			pyramidIBO->bind();
 
 			GLuint uniformLocation;
 
-			uniformLocation = glGetUniformLocation(FCProgram, "u_model");
+			uniformLocation = glGetUniformLocation(flatColourShader->getID(), "u_model");
 			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_models[0])); // Must include <glm/gtc/type_ptr.hpp>
 
-			uniformLocation = glGetUniformLocation(FCProgram, "u_view");
+			uniformLocation = glGetUniformLocation(flatColourShader->getID(), "u_view");
 			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_view));
 
-			uniformLocation = glGetUniformLocation(FCProgram, "u_projection");
+			uniformLocation = glGetUniformLocation(flatColourShader->getID(), "u_projection");
 			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_projection));
 
 			glDrawElements(GL_TRIANGLES, pyramidVAO->getDrawCount(), GL_UNSIGNED_INT, nullptr);
 
-			glUseProgram(TPProgram);
+			glUseProgram(texturedPhongShader->getID());
 			cubeVAO->bind();
 			cubeIBO->bind();
 
-			uniformLocation = glGetUniformLocation(TPProgram, "u_model");
+			uniformLocation = glGetUniformLocation(texturedPhongShader->getID(), "u_model");
 			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_models[1]));
 
-			uniformLocation = glGetUniformLocation(TPProgram, "u_view");
+			uniformLocation = glGetUniformLocation(texturedPhongShader->getID(), "u_view");
 			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_view));
 
-			uniformLocation = glGetUniformLocation(TPProgram, "u_projection");
+			uniformLocation = glGetUniformLocation(texturedPhongShader->getID(), "u_projection");
 			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_projection));
 
-			uniformLocation = glGetUniformLocation(TPProgram, "u_lightColour");
+			uniformLocation = glGetUniformLocation(texturedPhongShader->getID(), "u_lightColour");
 			glUniform3f(uniformLocation, 1.f, 1.f, 1.f);
 
-			uniformLocation = glGetUniformLocation(TPProgram, "u_lightPos");
+			uniformLocation = glGetUniformLocation(texturedPhongShader->getID(), "u_lightPos");
 			glUniform3f(uniformLocation, 1.f, 4.f, 6.f);
 
-			uniformLocation = glGetUniformLocation(TPProgram, "u_viewPos");
+			uniformLocation = glGetUniformLocation(texturedPhongShader->getID(), "u_viewPos");
 			glUniform3f(uniformLocation, 0.f, 0.f, 0.f);
 
-			uniformLocation = glGetUniformLocation(TPProgram, "u_texData");
+			uniformLocation = glGetUniformLocation(texturedPhongShader->getID(), "u_texData");
 			glUniform1i(uniformLocation, 0);
 
 			glDrawElements(GL_TRIANGLES, cubeVAO->getDrawCount(), GL_UNSIGNED_INT, nullptr);
 
-			uniformLocation = glGetUniformLocation(TPProgram, "u_model");
+			uniformLocation = glGetUniformLocation(texturedPhongShader->getID(), "u_model");
 			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_models[2]));
 
-			uniformLocation = glGetUniformLocation(TPProgram, "u_texData");
+			uniformLocation = glGetUniformLocation(texturedPhongShader->getID(), "u_texData");
 			glUniform1i(uniformLocation, 1);
 
 			glDrawElements(GL_TRIANGLES, cubeVAO->getDrawCount(), GL_UNSIGNED_INT, nullptr);
 
 			m_window->onUpdate(timeStep);
 		}
-
-		glDeleteProgram(FCProgram);
-		glDeleteProgram(TPProgram);
 
 		glDeleteTextures(1, &letterTexture);
 		glDeleteTextures(1, &numberTexture);

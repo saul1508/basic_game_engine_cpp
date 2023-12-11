@@ -4,6 +4,7 @@
 #include "systems/log.h"
 #include <string>
 #include <array>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Engine {
 	Shader::Shader(const char* vertexFilePath, const char* fragmentFilePath)
@@ -12,7 +13,7 @@ namespace Engine {
 		std::fstream handle(vertexFilePath, std::ios::in);
 		if (handle.is_open()) {
 			while (getline(handle, line)) {
-				vertexSrc += line;
+				vertexSrc += (line + "\n");
 			}
 		}
 		else {
@@ -23,7 +24,7 @@ namespace Engine {
 		handle.open(fragmentFilePath, std::ios::in);
 		if (handle.is_open()) {
 			while (getline(handle, line)) {
-				fragmentSrc += line;
+				fragmentSrc += (line + "\n");
 			}
 		}
 		else {
@@ -62,6 +63,11 @@ namespace Engine {
 		Log::error("src: {}", src[Region::Vertex].c_str());
 	}
 
+	Shader::~Shader()
+	{
+		glDeleteShader(m_openGLID);
+	}
+
 	void Shader::use()
 	{
 	}
@@ -70,10 +76,6 @@ namespace Engine {
 	{
 		uint32_t uniformLocation = glGetUniformLocation(m_openGLID, name);
 		glUniform1i(uniformLocation, value);
-	}
-
-	void Shader::uploadIntArray(const char* name, int32_t* values, int32_t count)
-	{
 	}
 
 	void Shader::uploadFloat(const char* name, float value)
@@ -102,10 +104,74 @@ namespace Engine {
 
 	void Shader::uploadMat4(const char* name, const glm::mat4& value)
 	{
+		uint32_t uniformLocation = glGetUniformLocation(m_openGLID, name);
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(value));
 	}
 
 	void Shader::compileAndLink(const char* vertexShaderSrc, const char* fragmentShaderSrc)
 	{
+		// Vertex
+		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+
+		const GLchar* source = vertexShaderSrc;
+		glShaderSource(vertexShader, 1, &source, 0);
+		glCompileShader(vertexShader);
+
+		GLint isCompiled = 0;
+		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
+		if (isCompiled == GL_FALSE) {
+			GLint maxLength = 2048;
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
+			Log::error("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
+			glDeleteShader(vertexShader);
+			return;
+		}
+
+		// Fragment
+		GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+		source = fragmentShaderSrc;
+		glShaderSource(fragmentShader, 1, &source, 0);
+		glCompileShader(fragmentShader);
+
+		isCompiled = 0;
+		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
+		if (isCompiled == GL_FALSE) {
+			GLint maxLength = 0;
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
+			Log::error("Shader compile error: {0}", std::string(infoLog.begin(), infoLog.end()));
+
+			glDeleteShader(fragmentShader);
+			glDeleteShader(vertexShader);
+			return;
+		}
+
+		m_openGLID = glCreateProgram();
+		glAttachShader(m_openGLID, vertexShader);
+		glAttachShader(m_openGLID, fragmentShader);
+		glLinkProgram(m_openGLID);
+
+		GLint isLinked = 0;
+		glGetProgramiv(m_openGLID, GL_LINK_STATUS, (int*)&isLinked);
+		if (isLinked == GL_FALSE) {
+			GLint maxLength = 0;
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetShaderInfoLog(m_openGLID, maxLength, &maxLength, &infoLog[0]);
+			Log::error("Shader linking error: {0}", std::string(infoLog.begin(), infoLog.end()));
+
+			glDeleteProgram(m_openGLID);
+			glDeleteShader(vertexShader);
+			glDeleteShader(fragmentShader);
+			return;
+		}
+
+		glDetachShader(m_openGLID, vertexShader);
+		glDetachShader(m_openGLID, fragmentShader);
 	}
 
 }
