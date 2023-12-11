@@ -36,7 +36,7 @@ namespace Engine {
 
 	Shader::Shader(const char* filepath)
 	{
-		enum Region {None = -1, Vertex = 0, Fragment, Geometry, TessellationControl, TessellationEvaluation, Compute };
+		enum Region { None = -1, Vertex = 0, Fragment, Geometry, TessellationControl, TessellationEvaluation, Compute };
 		std::string line;
 		std::array<std::string, Region::Compute + 1> src;
 		uint32_t region = Region::None;
@@ -51,6 +51,7 @@ namespace Engine {
 				if (line.find("#region TesselationEvaluation") != std::string::npos) { region = Region::TessellationEvaluation; continue; }
 				if (line.find("#region Compute") != std::string::npos) region = Region::Compute; continue; 
 				if (region != Region::None) src[region] += (line + "\n"); 
+				src[Region::Vertex] += (line + "\n");
 			}
 
 		} else {

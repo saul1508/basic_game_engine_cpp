@@ -51,6 +51,7 @@ namespace Engine {
 				if (line.find("#region TesselationEvaluation") != std::string::npos) { region = Region::TessellationEvaluation; continue; }
 				if (line.find("#region Compute") != std::string::npos) region = Region::Compute; continue; 
 				if (region != Region::None) src[region] += (line + "\n"); 
+				src[Region::Vertex] += (line + "\n");
 			}
 
 		} else {
