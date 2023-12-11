@@ -13,9 +13,12 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#include "platforms/openGL/vertexArray.h"
+#include "platforms/openGL/Shader.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "platforms/openGL/vertexArray.h"
+
 
 namespace Engine {
 	// Set static vars
@@ -241,23 +244,6 @@ namespace Engine {
 		pyramidVAO->unbind();
 		pyramidIBO->unbind();
 		pyramidVBO->unbind();
-
-		/*glCreateVertexArrays(1, &pyramidVAO);
-		glBindVertexArray(pyramidVAO);
-
-		glCreateBuffers(1, &pyramidVBO);
-		glBindBuffer(GL_ARRAY_BUFFER, pyramidVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidVertices), pyramidVertices, GL_STATIC_DRAW);
-
-		glCreateBuffers(1, &pyramidIBO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pyramidIBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(pyramidIndices), pyramidIndices, GL_STATIC_DRAW);
-
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));*/
 		
 		std::shared_ptr<VertexArray> cubeVAO;
 		std::shared_ptr<IndexBuffer> cubeIBO;
@@ -273,6 +259,9 @@ namespace Engine {
 		cubeVAO->unbind();
 		cubeVBO->unbind();
 		cubeIBO->unbind();
+
+		std::shared_ptr<Shader> flatColourShader;
+		flatColourShader.reset(new Shader("./assets/shaders/flatColour.glsl"));
 
 		FCVert = R"(
 		#version 440 core
@@ -557,30 +546,8 @@ namespace Engine {
 		{
 			timeStep = m_timer->getElapsedTime();
 			m_timer->reset();
-			Log::info("ts {}", timeStep);
-			//accumulatedTime += timeStep;
 
-
-
-			//Log::trace("Hello World! {0} {1}", 42, "I am a string");
-			//Log::trace("FPS {0} {1}", 1.0f / timeStep,  accumulatedTime);
-			//Log::trace("{0}", RandNumGenerator::normalInt(10.f, 2.5f));
-			//Log::trace("{0}", RandNumGenerator::uniformIntBetween(-10, 10));
-
-
-			if (InputPoller::isKeyPressed(NG_KEY_W)) Log::error("W Pressed");
-
-			if (InputPoller::isKeyPressed(NG_KEY_ESCAPE)) {
-				m_running = false;
-			}
-
-			//if (InputPoller::isKeyPressed(NG_KEY_W)) 
-			//if (InputPoller::isKeyPressed(NG_KEY_A)) 
-			//if (InputPoller::isKeyPressed(NG_KEY_S))
-			//if (InputPoller::isKeyPressed(NG_KEY_D)) 
-
-			// Do frame stuff
-			m_models[0] = glm::translate(glm::mat4(1.0f), pos) * glm::rotate(glm::mat4(1.0f), rot, glm::vec3(0.f, 1.f, 0.f));
+			if (InputPoller::isKeyPressed(NG_KEY_ESCAPE)) m_running = false;
 
 			if (InputPoller::isKeyPressed(NG_KEY_LEFT)) pos.x -= timeStep;
 			if (InputPoller::isKeyPressed(NG_KEY_RIGHT)) pos.x += timeStep;
@@ -590,6 +557,7 @@ namespace Engine {
 			if (InputPoller::isKeyPressed(NG_KEY_J)) rot -= timeStep;
 			if (InputPoller::isKeyPressed(NG_KEY_L)) rot += timeStep;
 
+			m_models[0] = glm::translate(glm::mat4(1.0f), pos) * glm::rotate(glm::mat4(1.0f), rot, glm::vec3(0.f, 1.f, 0.f));
 			m_models[1] = glm::rotate(m_models[1], timeStep, glm::vec3(0.f, 1.0, 0.f));
 			m_models[2] = glm::rotate(m_models[2], timeStep, glm::vec3(0.f, 1.0, 0.f));
 
@@ -597,6 +565,7 @@ namespace Engine {
 
 			glUseProgram(FCProgram);
 			pyramidVAO->bind();
+			pyramidIBO->bind();
 
 			GLuint uniformLocation;
 
@@ -613,6 +582,7 @@ namespace Engine {
 
 			glUseProgram(TPProgram);
 			cubeVAO->bind();
+			cubeIBO->bind();
 
 			uniformLocation = glGetUniformLocation(TPProgram, "u_model");
 			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_models[1]));
@@ -647,10 +617,6 @@ namespace Engine {
 
 			m_window->onUpdate(timeStep);
 		}
-
-		/*glDeleteVertexArrays(1, &pyramidVAO);
-		glDeleteBuffers(1, &pyramidVBO);
-		glDeleteBuffers(1, &pyramidIBO);*/
 
 		glDeleteProgram(FCProgram);
 		glDeleteProgram(TPProgram);

@@ -3,11 +3,13 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-/** \class Shader */
-class Shader {
+namespace Engine {
+	/** \class Shader */
+	class Shader {
 	public:
-		Shader(const char* vertexFilePath, const char* fragmentFilePath); //!< Constructor taking in two files
-		~Shader(); //!< Destructor for Shader
+		Shader(const char* vertexFilePath, const char* fragmentFilePath); //!< Constructor taking in two file paths
+		Shader(const char* filepath); //!< Overruden constructor taking one file path
+		~Shader() {}; //!< Destructor for Shader
 		uint32_t getID() const { return m_openGLID; } //!< Getter method for the openGL ID
 		void use(); //!< Method to use the currently bound shader
 		void uploadInt(const char* name, int value); //!< Method to upload an integer
@@ -20,4 +22,5 @@ class Shader {
 	private:
 		uint32_t m_openGLID; //!< OpenGL ID attribute
 		void compileAndLink(const char* vertexShaderSrc, const char* fragmentShaderSrc); //!< Method to compile and link the shader programs
-};
+	};
+}
