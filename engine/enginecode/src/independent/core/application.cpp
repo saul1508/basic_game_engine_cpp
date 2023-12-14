@@ -230,12 +230,17 @@ namespace Engine {
 			{ShaderDataType::Float2}
 		};
 
+		BufferLayout FCLayout{
+			{ShaderDataType::Float3},
+			{ShaderDataType::Float3},
+		};
+
 		std::shared_ptr<VertexArray> pyramidVAO;
 		std::shared_ptr<IndexBuffer> pyramidIBO;
 		std::shared_ptr<VertexBuffer> pyramidVBO;
 
 		pyramidVAO.reset(new VertexArray);
-		pyramidVBO.reset(new VertexBuffer(pyramidVertices, sizeof(pyramidVertices), TPLayout));
+		pyramidVBO.reset(new VertexBuffer(pyramidVertices, sizeof(pyramidVertices), FCLayout));
 		pyramidIBO.reset(new IndexBuffer(pyramidIndices, 3 * 6));
 
 		pyramidVAO->addVertexBuffer(pyramidVBO);
