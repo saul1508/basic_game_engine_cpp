@@ -43,3 +43,12 @@
 	url = https://github.com/nothings/stb.git
 	branch = master
 	update = rebase
+[submodule "vendor/assimp"]
+	path = vendor/assimp
+	url = https://github.com/IMAT3905/assimp.git
+	branch = master
+	update = rebase
+[submodule "vendor/react3d"]
+	path = vendor/react3d
+	url = https://github.com/IMAT3905/reactphysics3d.git
+	branch = master
